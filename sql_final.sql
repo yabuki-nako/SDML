@@ -12,6 +12,9 @@ CREATE TABLE `patient_detail` (
   `paddress` varchar(255) NOT NULL,
   PRIMARY KEY (`pId`)
 );
+ALTER TABLE `patient_detail`
+ADD COLUMN `otp` varchar(6);
+select * from patient_detail;
 -- select * from patient_detail;
 CREATE TABLE `specialties` (
   `id` int NOT NULL,
@@ -217,332 +220,332 @@ JOIN specialties ON doctor.specialties = specialties.id;
 -- 			INNER JOIN specialties ON doctor.specialties = specialties.id
 -- 			INNER JOIN patient_detail ON appointments.pId = patient_detail.pId
 -- 			INNER JOIN docsched ON appointments.appTime = docsched.appTime;
-use cms_db;
+-- use cms_db;
 
-select * from doctor;
-select * from appointments;
-select * from specialties;
-SELECT specialties.sname AS department, COUNT(*) AS bookings_count
-        FROM appointments
-        INNER JOIN doctor ON appointments.docid = doctor.docid
-        INNER JOIN specialties ON doctor.specialties = specialties.id
-        GROUP BY specialties.sname;
-	SELECT MONTH(appDate) AS month, COUNT(*) AS bookings_count
-            FROM appointments
-            GROUP BY MONTH(appDate)
-            
-            SELECT WEEK(appDate) AS week_number, COUNT(*) AS total_appointments
-        FROM appointments
-        GROUP BY WEEK(appDate)
-        
-        SELECT MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
-        FROM appointments
-        GROUP BY MONTH(appDate)
-        
-        SELECT YEAR(appDate) AS appointment_year, MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
-        FROM appointments
-        GROUP BY YEAR(appDate), MONTH(appDate)
-        
-        SELECT 
-            YEAR(appDate) AS appointment_year, 
-            MONTH(appDate) AS month_number, 
-            COUNT(*) AS total_appointments,
-            SUM(service_count) AS total_services_availed
-        FROM (
-            SELECT 
-                appDate,
-                COUNT(*) AS service_count
-            FROM appointments
-            GROUP BY appDate
-        ) AS services_availability
-        GROUP BY YEAR(appDate), MONTH(appDate)
-        
-        SELECT 
-            YEAR(appDate) AS appointment_year, 
-            MONTH(appDate) AS month_number, 
-            specialty,
-            COUNT(*) AS speciality
-        FROM appointments
-        GROUP BY YEAR(appDate), MONTH(appDate), specialty
-        
-        SELECT 
-            YEAR(appDate) AS appointment_year, 
-            MONTH(appDate) AS month_number, 
-            COUNT(*) AS total_appointments
-        FROM appointments
-        GROUP BY YEAR(appDate), MONTH(appDate)
-        
-        SELECT COUNT(*) AS count, MONTH(appDate) AS month
-                    FROM appointments
-                    INNER JOIN doctor ON appointments.docid = doctor.docid
-                    INNER JOIN specialties ON doctor.specialties = specialties.id
-                    GROUP BY MONTH(appDate), specialties.sname
-                    
-                    SELECT MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
-        FROM appointments
-        GROUP BY MONTH(appDate)
-        
-        
-        SELECT specialties.sname AS department, COUNT(*) AS bookings_count
-        FROM appointments
-        INNER JOIN doctor ON appointments.docid = doctor.docid
-        INNER JOIN specialties ON doctor.specialties = specialties.id
-        GROUP BY specialties.sname
-        
-        SELECT 
-            MONTH(appDate) AS month_number, 
-            COUNT(*) AS total_appointments,
-            COUNT(DISTINCT specialties.id) AS total_departments
-        FROM 
-            appointments
-        INNER JOIN 
-            doctor ON appointments.docid = doctor.docid
-        INNER JOIN 
-            specialties ON doctor.specialties = specialties.id
-        GROUP BY 
-            MONTH(appDate)
-            
-SELECT 
-    specialties.sname AS department, 
-    appDate AS booking_date,
-    COUNT(*) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-GROUP BY 
-    specialties.sname, appDate;
-    use cms_db;
-    SELECT 
-    specialties.sname AS department, 
-    appDate AS booking_date,
-    COUNT(DISTINCT appointments.appointment_ID) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-GROUP BY 
-    specialties.sname, appDate;
-    
-    SELECT specialties.sname AS department, 
-                MONTH(appointments.appDate) AS month_number, 
-                COUNT(*) AS bookings_count
-        FROM appointments
-        INNER JOIN doctor ON appointments.docid = doctor.docid
-        INNER JOIN specialties ON doctor.specialties = specialties.id
-        GROUP BY specialties.sname, MONTH(appointments.appDate)
-        
-SELECT 
-    specialties.sname AS department, 
-    MONTH(appointments.appDate) AS month_number, 
-    appointments.appDate AS booking_date,
-    COUNT(*) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-GROUP BY 
-    specialties.sname, MONTH(appointments.appDate), appointments.appDate;
+-- select * from doctor;
+-- select * from appointments;
+-- select * from specialties;
+-- SELECT specialties.sname AS department, COUNT(*) AS bookings_count
+--         FROM appointments
+--         INNER JOIN doctor ON appointments.docid = doctor.docid
+--         INNER JOIN specialties ON doctor.specialties = specialties.id
+--         GROUP BY specialties.sname;
+-- 	SELECT MONTH(appDate) AS month, COUNT(*) AS bookings_count
+--             FROM appointments
+--             GROUP BY MONTH(appDate)
+--             
+--             SELECT WEEK(appDate) AS week_number, COUNT(*) AS total_appointments
+--         FROM appointments
+--         GROUP BY WEEK(appDate)
+--         
+--         SELECT MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
+--         FROM appointments
+--         GROUP BY MONTH(appDate)
+--         
+--         SELECT YEAR(appDate) AS appointment_year, MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
+--         FROM appointments
+--         GROUP BY YEAR(appDate), MONTH(appDate)
+--         
+--         SELECT 
+--             YEAR(appDate) AS appointment_year, 
+--             MONTH(appDate) AS month_number, 
+--             COUNT(*) AS total_appointments,
+--             SUM(service_count) AS total_services_availed
+--         FROM (
+--             SELECT 
+--                 appDate,
+--                 COUNT(*) AS service_count
+--             FROM appointments
+--             GROUP BY appDate
+--         ) AS services_availability
+--         GROUP BY YEAR(appDate), MONTH(appDate)
+--         
+--         SELECT 
+--             YEAR(appDate) AS appointment_year, 
+--             MONTH(appDate) AS month_number, 
+--             specialty,
+--             COUNT(*) AS speciality
+--         FROM appointments
+--         GROUP BY YEAR(appDate), MONTH(appDate), specialty
+--         
+--         SELECT 
+--             YEAR(appDate) AS appointment_year, 
+--             MONTH(appDate) AS month_number, 
+--             COUNT(*) AS total_appointments
+--         FROM appointments
+--         GROUP BY YEAR(appDate), MONTH(appDate)
+--         
+--         SELECT COUNT(*) AS count, MONTH(appDate) AS month
+--                     FROM appointments
+--                     INNER JOIN doctor ON appointments.docid = doctor.docid
+--                     INNER JOIN specialties ON doctor.specialties = specialties.id
+--                     GROUP BY MONTH(appDate), specialties.sname
+--                     
+--                     SELECT MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
+--         FROM appointments
+--         GROUP BY MONTH(appDate)
+--         
+--         
+--         SELECT specialties.sname AS department, COUNT(*) AS bookings_count
+--         FROM appointments
+--         INNER JOIN doctor ON appointments.docid = doctor.docid
+--         INNER JOIN specialties ON doctor.specialties = specialties.id
+--         GROUP BY specialties.sname
+--         
+--         SELECT 
+--             MONTH(appDate) AS month_number, 
+--             COUNT(*) AS total_appointments,
+--             COUNT(DISTINCT specialties.id) AS total_departments
+--         FROM 
+--             appointments
+--         INNER JOIN 
+--             doctor ON appointments.docid = doctor.docid
+--         INNER JOIN 
+--             specialties ON doctor.specialties = specialties.id
+--         GROUP BY 
+--             MONTH(appDate)
+--             
+-- SELECT 
+--     specialties.sname AS department, 
+--     appDate AS booking_date,
+--     COUNT(*) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- GROUP BY 
+--     specialties.sname, appDate;
+--     use cms_db;
+--     SELECT 
+--     specialties.sname AS department, 
+--     appDate AS booking_date,
+--     COUNT(DISTINCT appointments.appointment_ID) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- GROUP BY 
+--     specialties.sname, appDate;
+--     
+--     SELECT specialties.sname AS department, 
+--                 MONTH(appointments.appDate) AS month_number, 
+--                 COUNT(*) AS bookings_count
+--         FROM appointments
+--         INNER JOIN doctor ON appointments.docid = doctor.docid
+--         INNER JOIN specialties ON doctor.specialties = specialties.id
+--         GROUP BY specialties.sname, MONTH(appointments.appDate)
+--         
+-- SELECT 
+--     specialties.sname AS department, 
+--     MONTH(appointments.appDate) AS month_number, 
+--     appointments.appDate AS booking_date,
+--     COUNT(*) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- GROUP BY 
+--     specialties.sname, MONTH(appointments.appDate), appointments.appDate;
 
-SELECT 
-    specialties.sname AS department, 
-    MONTH(appointments.appDate) AS month_number, 
-    YEAR(appointments.appDate) AS appointment_year,
-    COUNT(*) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-GROUP BY 
-    specialties.sname, MONTH(appointments.appDate), appointment_year, appointments.appDate;
+-- SELECT 
+--     specialties.sname AS department, 
+--     MONTH(appointments.appDate) AS month_number, 
+--     YEAR(appointments.appDate) AS appointment_year,
+--     COUNT(*) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- GROUP BY 
+--     specialties.sname, MONTH(appointments.appDate), appointment_year, appointments.appDate;
 
-SELECT 
-    specialties.sname AS department, 
-    MONTH(appointments.appDate) AS month_number,
-    COUNT(*) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-GROUP BY 
-    specialties.sname, MONTH(appointments.appDate)
+-- SELECT 
+--     specialties.sname AS department, 
+--     MONTH(appointments.appDate) AS month_number,
+--     COUNT(*) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- GROUP BY 
+--     specialties.sname, MONTH(appointments.appDate)
 
-SELECT 
-    specialties.sname AS department, 
-    YEAR(appointments.appDate) AS booking_year,
-    COUNT(*) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-WHERE 
-    YEAR(appointments.appDate) = 2023
-GROUP BY 
-    specialties.sname, YEAR(appointments.appDate)
+-- SELECT 
+--     specialties.sname AS department, 
+--     YEAR(appointments.appDate) AS booking_year,
+--     COUNT(*) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- WHERE 
+--     YEAR(appointments.appDate) = 2023
+-- GROUP BY 
+--     specialties.sname, YEAR(appointments.appDate)
 
-    SELECT 
-    specialties.sname AS department, 
-    MONTH(appointments.appDate) AS month_number,
-    YEAR(appointments.appDate) AS booking_year,
-    COUNT(*) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-GROUP BY 
-    specialties.sname, MONTH(appointments.appDate), YEAR(appointments.appDate)
-    
-    SELECT specialties.sname AS department, 
-                MONTH(appointments.appDate) AS month_number, 
-                COUNT(*) AS bookings_count
-        FROM appointments
-        INNER JOIN doctor ON appointments.docid = doctor.docid
-        INNER JOIN specialties ON doctor.specialties = specialties.id
-        GROUP BY specialties.sname, MONTH(appointments.appDate)
-        
-        
-        
-SELECT MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
-        FROM appointments
-        GROUP BY MONTH(appDate)
-        SELECT 
-    MONTH(appDate) AS month_number, 
-    COUNT(*) AS total_appointments
-FROM 
-    appointments
-WHERE 
-    YEAR(appDate) = 2023 -- Replace [selected_year] with the selected year from your PHP code
-GROUP BY 
-    MONTH(appDate);
-SELECT 
-    MONTH(appDate) AS month_number, 
-    YEAR(appDate) AS appointment_year,
-    COUNT(*) AS total_appointments
-FROM 
-    appointments
-GROUP BY 
-    YEAR(appDate), MONTH(appDate);
-    
-    SELECT MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
-        FROM appointments
-        GROUP BY MONTH(appDate)
-        
-SELECT 
-    specialties.sname AS department, 
-    MONTH(appointments.appDate) AS month_number, 
-    YEAR(appointments.appDate) AS appointment_year,
-    COUNT(*) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-GROUP BY 
-    YEAR(appointments.appDate), MONTH(appointments.appDate), specialties.sname;
-    
-SELECT 
-            specialties.sname AS department, 
-            MONTH(appointments.appDate) AS month_number, 
-            YEAR(appointments.appDate) AS appointment_year,
-            COUNT(*) AS bookings_count
-        FROM 
-            appointments
-        INNER JOIN 
-            doctor ON appointments.docid = doctor.docid
-        INNER JOIN 
-            specialties ON doctor.specialties = specialties.id
-        GROUP BY 
-            specialties.sname, MONTH(appointments.appDate), appointment_year, appointments.appDate
-            
-            select * from appointments;
-            SELECT DISTINCT specialties.sname
-            
-FROM doctor
-JOIN specialties ON doctor.specialties = specialties.id;
+--     SELECT 
+--     specialties.sname AS department, 
+--     MONTH(appointments.appDate) AS month_number,
+--     YEAR(appointments.appDate) AS booking_year,
+--     COUNT(*) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- GROUP BY 
+--     specialties.sname, MONTH(appointments.appDate), YEAR(appointments.appDate)
+--     
+--     SELECT specialties.sname AS department, 
+--                 MONTH(appointments.appDate) AS month_number, 
+--                 COUNT(*) AS bookings_count
+--         FROM appointments
+--         INNER JOIN doctor ON appointments.docid = doctor.docid
+--         INNER JOIN specialties ON doctor.specialties = specialties.id
+--         GROUP BY specialties.sname, MONTH(appointments.appDate)
+--         
+--         
+--         
+-- SELECT MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
+--         FROM appointments
+--         GROUP BY MONTH(appDate)
+--         SELECT 
+--     MONTH(appDate) AS month_number, 
+--     COUNT(*) AS total_appointments
+-- FROM 
+--     appointments
+-- WHERE 
+--     YEAR(appDate) = 2023 -- Replace [selected_year] with the selected year from your PHP code
+-- GROUP BY 
+--     MONTH(appDate);
+-- SELECT 
+--     MONTH(appDate) AS month_number, 
+--     YEAR(appDate) AS appointment_year,
+--     COUNT(*) AS total_appointments
+-- FROM 
+--     appointments
+-- GROUP BY 
+--     YEAR(appDate), MONTH(appDate);
+--     
+--     SELECT MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
+--         FROM appointments
+--         GROUP BY MONTH(appDate)
+--         
+-- SELECT 
+--     specialties.sname AS department, 
+--     MONTH(appointments.appDate) AS month_number, 
+--     YEAR(appointments.appDate) AS appointment_year,
+--     COUNT(*) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- GROUP BY 
+--     YEAR(appointments.appDate), MONTH(appointments.appDate), specialties.sname;
+--     
+-- SELECT 
+--             specialties.sname AS department, 
+--             MONTH(appointments.appDate) AS month_number, 
+--             YEAR(appointments.appDate) AS appointment_year,
+--             COUNT(*) AS bookings_count
+--         FROM 
+--             appointments
+--         INNER JOIN 
+--             doctor ON appointments.docid = doctor.docid
+--         INNER JOIN 
+--             specialties ON doctor.specialties = specialties.id
+--         GROUP BY 
+--             specialties.sname, MONTH(appointments.appDate), appointment_year, appointments.appDate
+--             
+--             select * from appointments;
+--             SELECT DISTINCT specialties.sname
+--             
+-- FROM doctor
+-- JOIN specialties ON doctor.specialties = specialties.id;
 
-SELECT doctor.docid, doctor.docemail, doctor.docname, doctor.doctel, specialties.sname
-            FROM doctor
-            JOIN specialties ON doctor.specialties = specialties.id
-            
-            SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
-appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status
-FROM appointments
-INNER JOIN doctor ON appointments.docid = doctor.docid
-INNER JOIN specialties ON doctor.specialties = specialties.id
-INNER JOIN patient_detail ON appointments.pId = patient_detail.pId
-INNER JOIN docsched ON appointments.appTime = docsched.appTime
+-- SELECT doctor.docid, doctor.docemail, doctor.docname, doctor.doctel, specialties.sname
+--             FROM doctor
+--             JOIN specialties ON doctor.specialties = specialties.id
+--             
+--             SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
+-- appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status
+-- FROM appointments
+-- INNER JOIN doctor ON appointments.docid = doctor.docid
+-- INNER JOIN specialties ON doctor.specialties = specialties.id
+-- INNER JOIN patient_detail ON appointments.pId = patient_detail.pId
+-- INNER JOIN docsched ON appointments.appTime = docsched.appTime
 
-INSERT INTO appointments (docid, pId,  appDate, appTime, App_status) VALUES (5, 2024-04-30, ?, ?, 'Pending')
-select * from docsched;
+-- INSERT INTO appointments (docid, pId,  appDate, appTime, App_status) VALUES (5, 2024-04-30, ?, ?, 'Pending')
+-- select * from docsched;
 
-SELECT specialties.sname AS department, 
-                MONTH(appointments.appDate) AS month_number, 
-                COUNT(*) AS bookings_count
-        FROM appointments
-        INNER JOIN doctor ON appointments.docid = doctor.docid
-        INNER JOIN specialties ON doctor.specialties = specialties.id
-        GROUP BY specialties.sname, MONTH(appointments.appDate)
-        
-        
-SELECT appointments.appointment_ID, patient_detail.pname,
-          appointments.appDate, docsched.Time_schedule, appointments.App_status
-          FROM appointments
-          INNER JOIN doctor ON appointments.docid = doctor.docid
-          INNER JOIN patient_detail ON appointments.pId = patient_detail.pId
-          INNER JOIN docsched ON appointments.appTime = docsched.appTime
-          use cms_db;
-          SELECT 
-            specialties.sname AS department, 
-            MONTH(appointments.appDate) AS month_number, 
-            YEAR(appointments.appDate) AS appointment_year,
-            COUNT(*) AS bookings_count
-        FROM 
-            appointments
-        INNER JOIN 
-            doctor ON appointments.docid = doctor.docid
-        INNER JOIN 
-            specialties ON doctor.specialties = specialties.id
-        GROUP BY 
-            specialties.sname, MONTH(appointments.appDate), appointment_year, appointments.appDate
-            
-            SELECT 
-    specialties.sname AS department, 
-    MONTH(appointments.appDate) AS month_number, 
-    YEAR(appointments.appDate) AS appointment_year,
-    COUNT(*) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-GROUP BY 
-    specialties.sname, MONTH(appointments.appDate), YEAR(appointments.appDate)
-            
-            SELECT 
-    specialties.sname AS department, 
-    YEAR(appointments.appDate) AS appointment_year,
-    COUNT(*) AS bookings_count
-FROM 
-    appointments
-INNER JOIN 
-    doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-    specialties ON doctor.specialties = specialties.id
-GROUP BY 
-    specialties.sname, YEAR(appointments.appDate)
+-- SELECT specialties.sname AS department, 
+--                 MONTH(appointments.appDate) AS month_number, 
+--                 COUNT(*) AS bookings_count
+--         FROM appointments
+--         INNER JOIN doctor ON appointments.docid = doctor.docid
+--         INNER JOIN specialties ON doctor.specialties = specialties.id
+--         GROUP BY specialties.sname, MONTH(appointments.appDate)
+--         
+--         
+-- SELECT appointments.appointment_ID, patient_detail.pname,
+--           appointments.appDate, docsched.Time_schedule, appointments.App_status
+--           FROM appointments
+--           INNER JOIN doctor ON appointments.docid = doctor.docid
+--           INNER JOIN patient_detail ON appointments.pId = patient_detail.pId
+--           INNER JOIN docsched ON appointments.appTime = docsched.appTime
+--           use cms_db;
+--           SELECT 
+--             specialties.sname AS department, 
+--             MONTH(appointments.appDate) AS month_number, 
+--             YEAR(appointments.appDate) AS appointment_year,
+--             COUNT(*) AS bookings_count
+--         FROM 
+--             appointments
+--         INNER JOIN 
+--             doctor ON appointments.docid = doctor.docid
+--         INNER JOIN 
+--             specialties ON doctor.specialties = specialties.id
+--         GROUP BY 
+--             specialties.sname, MONTH(appointments.appDate), appointment_year, appointments.appDate
+--             
+--             SELECT 
+--     specialties.sname AS department, 
+--     MONTH(appointments.appDate) AS month_number, 
+--     YEAR(appointments.appDate) AS appointment_year,
+--     COUNT(*) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- GROUP BY 
+--     specialties.sname, MONTH(appointments.appDate), YEAR(appointments.appDate)
+--             
+--             SELECT 
+--     specialties.sname AS department, 
+--     YEAR(appointments.appDate) AS appointment_year,
+--     COUNT(*) AS bookings_count
+-- FROM 
+--     appointments
+-- INNER JOIN 
+--     doctor ON appointments.docid = doctor.docid
+-- INNER JOIN 
+--     specialties ON doctor.specialties = specialties.id
+-- GROUP BY 
+--     specialties.sname, YEAR(appointments.appDate)
