@@ -60,33 +60,7 @@ $result = $mysqli->query($sql);
 </head>
 <body>
 </script>
-<header id="header" class="header d-flex align-items-center">
-
-    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
-      <div class="headercont">
-
-
-      <h1>Makiling Clinic</h1>
-  </div>
-  <nav id="navbar" class="navbar">
-        <ul>  
-          <li><a href="welcomedoctor.php">Home</a></li>
-          <li><a href="Doctor_Appointment_List.php">Appointment List</a></li>
-          <li><a href="Doctor_Patient_List.php">Patient List</a></li>
-          <li class="dropdown"><a href="#"><span>Profile</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-            <ul>
-              <li><a data-bs-toggle="modal" data-bs-target="#userdetail">View Account details</a></li> 
-
-              <li><a href="docpassreset.php">Reset Password</a></li>    
-              <li><a href="logout.php">Log Out</a></li>
-            </ul>
-          </li>
-        </ul>
-      </nav>
-
-
-
-</header>
+<?php include 'doctorheader.php';?>
     <div class="row d-flex justify-content-center align-items-center h-50">
 
       <div class="col col-xl-10">
@@ -126,8 +100,7 @@ $result = $mysqli->query($sql);
       <th scope="col">Time</th>
       <th scope="col">Appointment Status</th>
       <th scope="col"> Update Status</th>
-
-     
+      <th scope="col"> Medical history</th>
     </tr>
   </thead>
     
@@ -172,6 +145,9 @@ if ($result1->num_rows > 0) {
     echo "<td>" . $row['appDate'] . "</td>";
     echo "<td>" . $row['Time_schedule'] . "</td>";
     echo "<td>" . $row['App_status'] . "</td>";
+    echo "<td></td>";
+    echo "<td> <form method='post' 
+               <button type='submit' name='accept' class='btn btn-success btn-accept'>Edit Medical history</button> </td>";
     echo "<td>";
     
  // Check appointment status to determine button visibility

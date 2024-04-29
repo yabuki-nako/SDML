@@ -1,4 +1,3 @@
-
 <?php
 // Include config file
 session_start();
@@ -7,19 +6,20 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
   exit;
 }
 require_once "config.php";
- //start session
 
 // Define variables and initialize with empty values
 $email = $password  = $pname = $pCellphone = $pGender = $pbirthday = $paddress ="";
 $email_err = $password_err = $pname_err = $pCellphone_err = $pGender_err = $pbirthday_err = $paddress_err ="";
+$otp_err = "";
+
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Validate email
     if(empty(trim($_POST["email"]))){
-        $email_err = "Please enter a email.";
-    } elseif(!preg_match('/^[a-zA-Z0-9_@.]+$/', trim($_POST["email"]))){
-        $email_err = "email can only contain letters, numbers, and underscores.";
+        $email_err = "Please enter an email.";
+    } elseif(!filter_var(trim($_POST["email"]), FILTER_VALIDATE_EMAIL)){
+        $email_err = "Invalid email format.";
     } else{
         // Prepare a select statement
         $sql = "SELECT pid FROM patient_detail WHERE email = ?";
@@ -93,42 +93,63 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } else{
         $paddress = trim($_POST["paddress"]);
     }
-    // Check input errors before inserting in database
-    if(empty($email_err) && empty($password_err) && empty($pname_err) && empty($pCellphone_err) && empty($pGender_err) && empty($pbirthday_err) && empty($paddress_err)){
-        
-        // Prepare an insert statement
-        $sql = "INSERT INTO patient_detail (pname,email, password, pCellphone, pGender, pbirthday, paddress) VALUES (?, ?, ?, ?, ?, ?, ?)";
-         
-        if($stmt = $mysqli->prepare($sql)){
-            // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("sssssss",$param_pname, $param_email, $param_password, $param_pCellphone, $param_pGender, $param_pbirthday, $param_paddress);
-            
-            // Set parameters
-            $param_pname = $pname;
-            $param_email = $email;
-            $param_pCellphone = $pCellphone;
-            $param_pGender = $pGender;
-            $param_pbirthday = $pbirthday;
-            $param_paddress = $paddress;
-            $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
-            
-            // Attempt to execute the prepared statement
-            if($stmt->execute()){
-                // Redirect to login page
-                header("location: index.php");
-            } else{
-                echo "Oops! Something went wrong. Please try again later.";
-            }
 
-            // Close statement
-            $stmt->close();
-        }
-    }
-    
-    // Close connection
-    $mysqli->close();
+// Function to generate OTP
+function generateOTP($length = 6) {
+  $characters = '0123456789';
+  $otp = '';
+  $max = strlen($characters) - 1;
+  for ($i = 0; $i < $length; $i++) {
+      $otp .= $characters[random_int(0, $max)];
+  }
+  return $otp;
 }
+
+// Processing form data when form is submitted
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+  // Validate email
+  if(empty(trim($_POST["email"]))){
+      $email_err = "Please enter an email.";
+  } elseif(!preg_match('/^[a-zA-Z0-9_@.]+$/', trim($_POST["email"]))){
+      $email_err = "Email can only contain letters, numbers, and underscores.";
+  } else{
+      $email = trim($_POST["email"]);
+  }
+
+  // Generate and send OTP
+  $otp = generateOTP();
+  // Store the OTP in session for verification
+  $_SESSION['otp'] = $otp;
+  // Send the OTP to the user's email (Replace this with your actual email sending logic)
+  $to = $email;
+  $subject = "OTP for Email Verification";
+  $message = "Your OTP for email verification is: $otp";
+  $headers = "From: your@example.com" . "\r\n" .
+             "CC: another@example.com";
+  mail($to, $subject, $message, $headers);
+
+  // Display the OTP verification modal
+  echo '<script type="text/javascript">
+          $(document).ready(function(){
+            $("#otpModal").modal("show");
+          });
+        </script>';
+}
+
+// Verify OTP when the OTP form is submitted
+if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['verify_otp'])) {
+  $user_otp = $_POST['otp'];
+  if($user_otp === $_SESSION['otp']) {
+      // OTP verified successfully, proceed with account creation
+      // Your account creation logic here
+  } else {
+      $otp_err = "Invalid OTP, please try again.";
+  }
+}
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -215,14 +236,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;"></h5>
 
                   <div class="form-outline mb-4">
-                  <label class="form-label" for="form2Example17">Name</label>
+                    <label>Name</label>
                     <input type="text" id="pname" name="pname" class="form-control form-control-lg <?php echo (!empty($pname_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $pname; ?>">
                     <span class="invalid-feedback"><?php echo $pname_err; ?></span>
                   </div>
 
                   <div class="form-outline mb-4">
-                  <label class="form-label" for="form2Example17">Email</label>
-                  <input type="text" id="email" name="email" class="form-control form-control-lg <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>">
+                    <label>Email</label>
+                    <input type="text" id="email" name="email" class="form-control form-control-lg <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>">
                     <span class="invalid-feedback"><?php echo $email_err; ?></span>
                   </div>
 
@@ -233,13 +254,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                   </div>
                   
                   <div class="form-outline mb-4">
-                  <label class="form-label" for="form2Example17">Cellphone Number</label>
+                    <label>Cellphone Number</label>
                     <input type="text" id="pCellphone" name="pCellphone" class="form-control form-control-lg <?php echo (!empty($pCellphone_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $pCellphone; ?>">
                     <span class="invalid-feedback"><?php echo $pCellphone_err; ?></span>
                   </div>
 
                   <div class="form-outline mb-4">
-                    <label class="form-label" for="gender">Gender</label>
+                    <label>Gender</label>
                     <select name="pGender" id="pGender" class="form-control form-control-lg <?php echo (!empty($pGender_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $pGender; ?>">
                       <option disabled selected>Select Gender</option>
                       <option value="Male">Male</option>
@@ -249,19 +270,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                   </div>
 
                   <div class="form-outline mb-4">
-                  <label class="form-label" for="form2Example27">Birthday</label>
+                    <label>Birthday</label>
                     <input type="date" id="pbirthday"  name="pbirthday" onkeydown="return false" onfocus="blur() "  max="<?php echo date("Y-m-d"); ?>" class="form-control form-control-lg <?php echo (!empty($pbirthday_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $pbirthday; ?>">
                     <span class="invalid-feedback"><?php echo $pbirthday_err; ?></span>
                   </div>
+                  
                   <div class="form-outline mb-4">
-                  <label class="form-label" for="form2Example27">Address</label>
-                  <input type="text" id="paddress" name ="paddress" class="form-control form-control-lg <?php echo (!empty($paddress_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $paddress; ?>">
+                    <label>Address</label>
+                    <input type="text" id="paddress" name ="paddress" class="form-control form-control-lg <?php echo (!empty($paddress_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $paddress; ?>">
                     <span class="invalid-feedback"><?php echo $paddress_err; ?></span>
                   </div>
+                  
                   <div class="pt-1 mb-4">
-                    <input type="submit" class="btn btn-dark btn-lg" value="Submit"><br><br>
-                    <p class="mb-0 pb-lg-2" style="color: #393f81;">Already have an account? <a href="login.php" style="color: #393f81;">Login Here</a></p>
-                    <p class="mb-0 pb-lg-2" style="color: #393f81;"><a href="Loginemp.php"></a></p>
+                    <input type="submit" class="btn btn-dark btn-lg" value="Send OTP">
+                    <p class="text-danger"><?php echo $otp_err; ?></p>
                   </div>
                 </form>
               </div>
@@ -273,35 +295,49 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   </div>
 </section>
 
-
-
-
-  </main><!-- End #main -->
-
-  <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
-
-<div class="container">
-  <div class="row gy-4">
-
+<!-- OTP Verification Modal -->
+<div class="modal fade" id="otpModal" tabindex="-1" role="dialog" aria-labelledby="otpModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="otpModalLabel">Enter OTP</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+          <div class="form-group">
+            <label for="otp">OTP:</label>
+            <input type="text" class="form-control" id="otp" name="otp">
+          </div>
+          <input type="submit" class="btn btn-primary" value="Verify OTP">
+        </form>
+      </div>
+    </div>
   </div>
 </div>
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+  <div class="container">
+    <div class="row gy-4">
+    </div>
+  </div>
 </footer>
 
-  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <div id="preloader"></div>
+<div id="preloader"></div>
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<!-- Vendor JS Files -->
+<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
 
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
-<!-- date -->
-
-  
+<!-- Template Main JS File -->
+<script src="assets/js/main.js"></script>
 </body>
-
 </html>
