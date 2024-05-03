@@ -625,16 +625,18 @@
 			  INNER JOIN docsched ON appointments.appTime = docsched.appTime
               
               
-         SELECT appointments.appointment_ID, 
-       patient_detail.pId,
-       appointments.appDate, 
-       docsched.time_schedule, 
-       appointments.App_status,
+         SELECT patient_detail.pId,
        pdf_files.file_name,
-       pdf_files.file_path
-
+       pdf_files.file_path,
+       pdf_files.upload_date
 FROM appointments
 INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN patient_detail ON appointments.pId = patient_detail.pId
 INNER JOIN docsched ON appointments.appTime = docsched.appTime
 LEFT JOIN pdf_files ON appointments.appointment_ID = pdf_files.appointment_ID;
+
+ 
+SELECT pdf_files.*, patient_detail.pId
+FROM pdf_files
+INNER JOIN appointments ON pdf_files.appointment_ID = appointments.appointment_ID
+INNER JOIN patient_detail ON appointments.pId = patient_detail.pId;
