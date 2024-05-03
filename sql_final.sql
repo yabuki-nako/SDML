@@ -639,4 +639,8 @@ LEFT JOIN pdf_files ON appointments.appointment_ID = pdf_files.appointment_ID;
 SELECT pdf_files.*, patient_detail.pId
 FROM pdf_files
 INNER JOIN appointments ON pdf_files.appointment_ID = appointments.appointment_ID
+<<<<<<< HEAD
 INNER JOIN patient_detail ON appointments.pId = patient_detail.pId;
+=======
+INNER JOIN patient_detail ON appointments.pId = patient_detail.pId;
+>>>>>>> 3a6ff12259aade303ad729b317b53cef244ce2d0
