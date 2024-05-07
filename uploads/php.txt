@@ -1,0 +1,61 @@
+//
+// View PDF file if specified in URL
+if (isset($_GET['file'])) {
+    $file = $_GET['file'];
+    $file_path = "uploads/" . $file;
+
+    // Check if file exists
+    if (file_exists($file_path)) {
+        header('Content-type: application/pdf');
+        readfile($file_path);
+        exit;
+    } else {
+        echo "File not found.";
+        exit;
+    }
+}
+
+// Handle file upload
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["fileToUpload"])) {
+    $target_file = "uploads/" . basename($_FILES["fileToUpload"]["name"]);
+    $uploadOk = 1;
+    $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    if (isset($_POST["appointmentID"])) {
+      $appointmentID = $_POST["appointmentID"];
+      if ($fileType != "pdf") {
+        echo "Sorry, only PDF files are allowed.";
+        $uploadOk = 0;
+    }
+
+    // Check if upload is successful
+    if ($uploadOk == 0) {
+        echo "Sorry, your file was not uploaded.";
+    } else {
+        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+            // File uploaded successfully, now insert into database
+            $file_name = $_FILES["fileToUpload"]["name"];
+            $file_path = $target_file;
+
+            // Prepare SQL statement
+            $stmt = $mysqli->prepare("INSERT INTO pdf_files (appointment_ID, file_name, file_path) VALUES (?, ?, ?)");
+            $stmt->bind_param("iss", $appointmentID, $file_name, $file_path);
+
+            // Execute the statement
+            if ($stmt->execute()) {
+                echo "The file " . basename($_FILES["fileToUpload"]["name"]) . " has been uploaded and associated with appointment ID " . $appointmentID;
+            } else {
+                echo "Sorry, there was an error uploading your file to the database.";
+            }
+            $stmt->close();
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
+    }
+  } else {
+      // Handle the case where appointmentID is not set
+      echo "Appointment ID is not set.";
+  }
+
+    // Check if file is a PDF
+
+}
