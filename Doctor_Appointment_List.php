@@ -228,6 +228,22 @@ switch ($action) {
   </script>
 </head>
 <body>
+<div id="loading-overlay">
+    <div id="loading-wheel">
+        <img src="assets/img/ZKZg.gif" style="width:48px;height:48px;">
+    </div>
+</div>
+</div>
+<script> 
+           
+function showLoadingOverlay() {
+    $('#loading-overlay').show();
+}
+
+// Hide loading overlay
+function hideLoadingOverlay() {
+    $('#loading-overlay').hide();
+}
 </script>
 <?php include 'doctorheader.php';?>
 <section class="vh-110">
@@ -367,7 +383,7 @@ echo "<tr><td colspan='6'>No data available</td></tr>";
 
 function collectData(appointmentID, pname, email, appDate, Time_schedule) {
     // Send data to PHP script via AJAX
-    $('#loading-wheel').show();
+    showLoadingOverlay();
     $.ajax({
         type: "POST",
         url: "send_email.php", // Path to your PHP script
@@ -379,8 +395,9 @@ function collectData(appointmentID, pname, email, appDate, Time_schedule) {
             Time_schedule: Time_schedule
         },
         success: function(response) {
+          hideLoadingOverlay();
             alert("Email sent!"); // Notify user if email is sent successfully
-            $('#loading-wheel').hide();
+
         },
         error: function(xhr, status, error) {
             console.error(xhr.responseText);
