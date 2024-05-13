@@ -291,6 +291,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $appointmentID = $_POST["appointmentID"];
     $updateQuery = "UPDATE appointments SET App_status = 'Accepted' WHERE appointment_ID = $appointmentID";
     $mysqli->query($updateQuery);
+    echo '<script>
+    function collectData(appointmentID, pname, email, appDate, Time_schedule) {
+      // Send data to PHP script via AJAX
+      $.ajax({
+          type: "POST",
+          url: "send_email.php", // Path to your PHP script
+          data: {
+              appointmentID: appointmentID,
+              email: email,
+              pname: pname,
+              appDate: appDate,
+              Time_schedule: Time_schedule
+          },
+          success: function(response) {
+              alert("Email sent!"); // Notify user if email is sent successfully
+
+          },
+          error: function(xhr, status, error) {
+              console.error(xhr.responseText);
+              alert("Error sending email. Please try again later.");
+          }
+      });
+  }
+    </script>';
   } elseif (isset($_POST["done"])) {
     // Handle done button click
     $appointmentID = $_POST["appointmentID"];
@@ -301,6 +325,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $appointmentID = $_POST["appointmentID"];
     $updateQuery = "UPDATE appointments SET App_status = 'Cancelled' WHERE appointment_ID = $appointmentID";
     $mysqli->query($updateQuery);
+    echo '<script>
+    function collectData1(appointmentID, pname, email, appDate, Time_schedule) {
+      // Send data to PHP script via AJAX
+      $.ajax({
+          type: "POST",
+          url: "send_email1.php", // Path to your PHP script
+          data: {
+              appointmentID: appointmentID,
+              email: email,
+              pname: pname,
+              appDate: appDate,
+              Time_schedule: Time_schedule
+          },
+          success: function(response) {
+              alert("Email sent!"); // Notify user if email is sent successfully
+
+          },
+          error: function(xhr, status, error) {
+              console.error(xhr.responseText);
+              alert("Error sending email. Please try again later.");
+          }
+      });
+  }
+    </script>';
   }
 }
 
@@ -333,8 +381,8 @@ if ($result1->num_rows > 0) {
       echo "<input type='hidden' name='Time_schedule' value='" . $row['Time_schedule'] . "'>"; // Add hidden input for Time_schedule
       echo "<input type='hidden' name='email' value='" . $row['email'] . "'>";
       echo "<div class='button-row'>"; // Start of the second line
-      echo "<button type='submit' name='accept' class='btn btn-primary btn-done' id='accept' onclick=\"collectData('" . $row['appointment_ID'] . "', '" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Accept</button>";
-      echo "<button type='submit' name='cancel' class='btn btn-danger btn-cancel' >Cancel</button>";
+      echo "<button type='submit' name='accept' class='btn btn-primary btn-done' onclick=\"collectData('" . $row['appointment_ID'] . "', '" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Accept</button>";
+      echo "<button type='submit' name='cancel' class='btn btn-danger btn-cancel' onclick=\"collectData1('" . $row['appointment_ID'] . "', '" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Cancel</button>";
       echo "</div>"; // End of the second line
       echo "</form>";
       
@@ -705,28 +753,27 @@ Drug name, prescribed date -->
 <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
 
 <script>
-
-function collectData(appointmentID, pname, email, appDate, Time_schedule) {
-    // Send data to PHP script via AJAX
-    $.ajax({
-        type: "POST",
-        url: "send_email.php", // Path to your PHP script
-        data: {
-            appointmentID: appointmentID,
-            email: email,
-            pname: pname,
-            appDate: appDate,
-            Time_schedule: Time_schedule
-        },
-        success: function(response) {
-            alert("Email sent!"); // Notify user if email is sent successfully
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            alert("Error sending email. Please try again later.");
-        }
-    });
-}
+// function collectData(appointmentID, pname, email, appDate, Time_schedule) {
+//     // Send data to PHP script via AJAX
+//     $.ajax({
+//         type: "POST",
+//         url: "send_email.php", // Path to your PHP script
+//         data: {
+//             appointmentID: appointmentID,
+//             email: email,
+//             pname: pname,
+//             appDate: appDate,
+//             Time_schedule: Time_schedule
+//         },
+//         success: function(response) {
+//             alert("Email sent!"); // Notify user if email is sent successfully
+//         },
+//         error: function(xhr, status, error) {
+//             console.error(xhr.responseText);
+//             alert("Error sending email. Please try again later.");
+//         }
+//     });
+// }
 // $(document).ready(function() {
 //   $('#statusemail').submit(function(event) {
 //     event.preventDefault();
