@@ -15,7 +15,7 @@ $Time_schedule = $_POST['Time_schedule'];
 
 // Create a PHPMailer instance
 $mail = new PHPMailer();
-$mail->SMTPDebug = 2; // Enable debugging
+$mail->SMTPDebug = 0; // Enable debugging
 $mail->Debugoutput = 'html'; 
 // Configure SMTP
 $mail->isSMTP();
@@ -29,8 +29,8 @@ $mail->Port = 587;
 // Set email parameters
 $mail->setFrom('Saint.Dominic4027@gmail.com', 'Clinic Test'); // Sender's email and name
 $mail->addAddress($email, $pname); 
-$mail->Subject = 'Appointment Details';
-$mail->Body = "Appointment ID: $appointmentID\nPatient Name: $pname\nAppointment Date: $appDate\nTime Schedule: $Time_schedule";
+$mail->Subject = 'Cancellleeeeed';
+$mail->Body = " CANCELLLEEEDDDDDD Appointment ID: $appointmentID\nPatient Name: $pname\nAppointment Date: $appDate\nTime Schedule: $Time_schedule";
 
 // Send email
 if (!$mail->send()) {
