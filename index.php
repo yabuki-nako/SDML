@@ -48,7 +48,7 @@
         <img src ="assets/img/logoName.png" width="250" height="60" >
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="#hero">Home13</a></li>
+          <li><a href="#hero">Home132</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#testimonials">Testimonial</a></li>
           <li><a href="#doctors">Doctors</a></li>
