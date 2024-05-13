@@ -203,10 +203,12 @@ switch ($action) {
   <!-- Template Main CSS File -->
   <link href="assets/css/patient.css" rel="stylesheet">
   <link href="assets/css/header.css" rel="stylesheet">
+  <script src = "assets/js/doctor.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script src = "assets/js/doctor.js"></script>
   <!-- TIMER FUNCTION -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
 
   <script>
     $(document).ready(function(){
@@ -277,7 +279,12 @@ switch ($action) {
     
   <?php
 $docid = $_SESSION['docid'];
+require_once "assets/PHPMailer/src/PHPMailer.php";
+require_once "assets/PHPMailer/src/SMTP.php";
+require_once "assets/PHPMailer/src/Exception.php";
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Check which button is clicked
   if (isset($_POST["accept"])) {
@@ -299,7 +306,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Loop through the result set and generate table rows
-$sql1 = "SELECT appointments.appointment_ID, patient_detail.pname, patient_detail.pID,
+$sql1 = "SELECT appointments.appointment_ID, patient_detail.pname, patient_detail.pID, patient_detail.email,
 appointments.appDate, docsched.Time_schedule, appointments.App_status 
 FROM appointments 
 INNER JOIN doctor ON appointments.docid = doctor.docid
@@ -314,17 +321,22 @@ if ($result1->num_rows > 0) {
     echo "<tr>";
     echo "<td>" . $row['appointment_ID'] . "</td>";
     echo "<td>" . $row['pname'] . "</td>";
+    echo "<td style='display:none;'>" . $row['email'] . "</td>";
     echo "<td>" . $row['appDate'] . "</td>";
     echo "<td>" . $row['Time_schedule'] . "</td>";
     echo "<td>" . $row['App_status'] . "</td>";
     echo "<td>";
     if ($row['App_status'] == 'Pending') {
-      echo "<form method='post'>";
+      echo "<form method='post' id='statusemail'>";
+      echo "<input type='hidden' name='email' value='" . $row['email'] . "'>";
       echo "<input type='hidden' name='appointmentID' value='" . $row['appointment_ID'] . "'>";
-      echo "<div class='button-row'>"; // Start of the first line
-      echo "<button type='submit' name='accept' class='btn btn-success btn-accept'>Accept</button>";
-      echo "<button type='submit' name='cancel' class='btn btn-danger btn-cancel'>Cancel</button>";
-      echo "</div>"; // End of the first line
+      echo "<input type='hidden' name='pname' value='" . $row['pname'] . "'>"; // Add hidden input for pname
+      echo "<input type='hidden' name='appDate' value='" . $row['appDate'] . "'>"; // Add hidden input for appDate
+      echo "<input type='hidden' name='Time_schedule' value='" . $row['Time_schedule'] . "'>"; // Add hidden input for Time_schedule
+      echo "<div class='button-row'>"; // Start of the second line
+      echo "<button type='submit' name='accept' class='btn btn-primary btn-done' onclick=\"collectData('" . $row['appointment_ID'] . "', '" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Accept</button>";
+      echo "<button type='submit' name='cancel' class='btn btn-danger btn-cancel' onclick=\"collectData1('" . $row['appointment_ID'] . "', '" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Cancel</button>";
+      echo "</div>"; // End of the second line
       echo "</form>";
     } elseif ($row['App_status'] == 'Accepted') {
       echo "<form method='post'>";
@@ -351,7 +363,53 @@ if ($result1->num_rows > 0) {
 echo "<tr><td colspan='6'>No data available</td></tr>";
 }
 ?>
+<script>
 
+function collectData(appointmentID, pname, email, appDate, Time_schedule) {
+    // Send data to PHP script via AJAX
+    $.ajax({
+        type: "POST",
+        url: "send_email.php", // Path to your PHP script
+        data: {
+            appointmentID: appointmentID,
+            email: email,
+            pname: pname,
+            appDate: appDate,
+            Time_schedule: Time_schedule
+        },
+        success: function(response) {
+            alert("Email sent!"); // Notify user if email is sent successfully
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            alert("Error sending email. Please try again later.");
+        }
+    });
+}
+    function collectData1(appointmentID, pname, email, appDate, Time_schedule) {
+      // Send data to PHP script via AJAX
+      $.ajax({
+          type: "POST",
+          url: "send_email1.php", // Path to your PHP script
+          data: {
+              appointmentID: appointmentID,
+              email: email,
+              pname: pname,
+              appDate: appDate,
+              Time_schedule: Time_schedule
+          },
+          success: function(response) {
+              alert("Email sent!"); // Notify user if email is sent successfully
+
+          },
+          error: function(xhr, status, error) {
+              console.error(xhr.responseText);
+              alert("Error sending email. Please try again later.");
+          }
+      });
+  }
+
+</script>
 </div></div>
 </div>
 </div>
