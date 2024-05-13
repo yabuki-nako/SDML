@@ -1,0 +1,32 @@
+@media (max-width: 992px) {
+  .navbar {
+    display: none;
+    flex-basis: 100%;
+  }
+
+  .navbar-collapse {
+    display: none;
+    flex-basis: 100%;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .navbar-collapse.show {
+    display: flex;
+  }
+
+  .navbar-collapse li {
+    margin: 10px 0;
+  }
+}
+
+.navbar-toggler {
+  display: none;
+}
+
+@media (max-width: 992px) {
+  .navbar-toggler {
+    display: block;
+  }
+}
