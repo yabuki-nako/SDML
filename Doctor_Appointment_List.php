@@ -367,6 +367,7 @@ echo "<tr><td colspan='6'>No data available</td></tr>";
 
 function collectData(appointmentID, pname, email, appDate, Time_schedule) {
     // Send data to PHP script via AJAX
+    $('#loading-wheel').show();
     $.ajax({
         type: "POST",
         url: "send_email.php", // Path to your PHP script
@@ -379,6 +380,7 @@ function collectData(appointmentID, pname, email, appDate, Time_schedule) {
         },
         success: function(response) {
             alert("Email sent!"); // Notify user if email is sent successfully
+            $('#loading-wheel').hide();
         },
         error: function(xhr, status, error) {
             console.error(xhr.responseText);
