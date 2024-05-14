@@ -20,7 +20,7 @@ use PHPMailer\PHPMailer\Exception;
 // Function to check if OTP has been sent within last 1 minutes
 function otpSentRecently() {
     if(isset($_SESSION['otp_time'])) {
-        return (time() - $_SESSION['otp_time']) <= (1 * 60);
+        return (time() - $_SESSION['otp_time']) <= (15 * 60);
     }
     return false;
 }
@@ -28,7 +28,7 @@ function otpSentRecently() {
 // Check if OTP has already been sent recently
 if(isset($_SESSION['otp']) && otpSentRecently()) {
     // OTP has been sent recently, show message or handle accordingly
-    echo "<script type='text/javascript'>alert('OTP has already been sent. Please check your email or wait before requesting a new one.');</script>";
+    echo "";
 } else {
     // Generate OTP
     $otp = mt_rand(100000, 999999);
@@ -39,7 +39,7 @@ if(isset($_SESSION['otp']) && otpSentRecently()) {
 
     // Create PHPMailer instance
     $mail = new PHPMailer();
-    $mail->SMTPDebug = 0; // Enable debugging
+    $mail->SMTPDebug = 2; // Enable debugging
     $mail->Debugoutput = 'html'; 
     // Configure PHPMailer
     $mail->isSMTP();
@@ -70,8 +70,15 @@ if(isset($_SESSION['otp']) && otpSentRecently()) {
     }
 }
 
+$otp_err = ''; 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Validate OTP
+
+    if (!isset($_POST["otp"]) || empty(trim($_POST["otp"]))) {
+          $otp_err = "Please enter otp."; 
+      } else {
+          $otp_input = trim($_POST["otp"]);
+      }
   if (isset($_SESSION['otp']) && isset($_POST['otp']) && $_POST['otp'] == $_SESSION['otp']) {
       // Check if OTP is expired
       if (isset($_SESSION['otp_time']) && ($current_time - $_SESSION['otp_time']) <= (15 * 60)) { // 1 minutes * 60 seconds
@@ -180,7 +187,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <h5 class="fw-normal mb-3 pb-3" ></h5>
 
                   <div class="form-outline mb-4">
-                    <input type="text" name ="otp"id="otp" class="form-control form-control-lg" placeholder ="Enter here"/>
+                    <input type="text" name ="otp"id="otp" class="form-control form-control-lg <?php echo (!empty($otp_err)) ? 'is-invalid' : ''; ?>">
+                    <span class="invalid-feedback"><?php echo $otp_err; ?></span>
                   </div>
                   <div class="pt-1 mb-2">
                         <input type="submit" class="btn btn-dark btn-lg btn-block" value="Verify OTP">
@@ -194,7 +202,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </form>
 <?php
 function formatRemainingTime($otp_time) {
-    $remaining_time = ($otp_time + (1 * 60)) - time();
+    $remaining_time = ($otp_time + (15 * 60)) - time();
     $minutes = floor($remaining_time / 60);
     $seconds = $remaining_time % 60;
     return '(' . $minutes . 'm ' . $seconds . 's)';
@@ -228,8 +236,8 @@ function formatRemainingTime($otp_time) {
 
 <script>
     // Check if the OTP is expired
-    var otpExpired = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time']) && (time() - $_SESSION['otp_time']) > (1 * 60)) ? 'true' : 'false'; ?>;
-    var remainingTime = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time'])) ? ($_SESSION['otp_time'] + (1 * 60)) - time() : 0; ?>;
+    var otpExpired = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time']) && (time() - $_SESSION['otp_time']) > (15 * 60)) ? 'true' : 'false'; ?>;
+    var remainingTime = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time'])) ? ($_SESSION['otp_time'] + (15 * 60)) - time() : 0; ?>;
     
     // Disable the resend OTP button if OTP is not expired
     if (!otpExpired) {
@@ -250,7 +258,7 @@ function formatRemainingTime($otp_time) {
     setTimeout(enableResendButton, remainingTime * 1000); // Convert remaining time to milliseconds
 
     function startTimer() {
-    var remainingTime = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time'])) ? ($_SESSION['otp_time'] + (1 * 59)) - time() : 0; ?>;
+    var remainingTime = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time'])) ? ($_SESSION['otp_time'] + (15 * 59)) - time() : 0; ?>;
     var timerElement = document.getElementById("timer");
     var interval = setInterval(function() {
         var minutes = Math.floor(remainingTime / 59);
