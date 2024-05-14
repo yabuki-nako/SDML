@@ -407,6 +407,7 @@ function collectData(appointmentID, pname, email, appDate, Time_schedule) {
 }
     function collectData1(appointmentID, pname, email, appDate, Time_schedule) {
       // Send data to PHP script via AJAX
+      showLoadingOverlay();
       $.ajax({
           type: "POST",
           url: "send_email1.php", // Path to your PHP script
@@ -418,6 +419,8 @@ function collectData(appointmentID, pname, email, appDate, Time_schedule) {
               Time_schedule: Time_schedule
           },
           success: function(response) {
+            hideLoadingOverlay();
+            location.reload()
               alert("Email sent!"); // Notify user if email is sent successfully
 
           },
