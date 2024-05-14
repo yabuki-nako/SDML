@@ -9,6 +9,12 @@ require_once "config.php";
 // time and date
 $today = date("F j, Y ");
 
+$docid = $_SESSION['docid'];
+$sql2 = "	SELECT distinct patient_detail.pname, patient_detail.pCellphone, patient_detail.pGender , patient_detail.paddress
+FROM patient_detail  INNER JOIN appointments ON appointments.pId = patient_detail.pId
+where appointments.docid = $docid";
+$result2 = $mysqli->query($sql2);
+$rowCount = mysqli_num_rows($result2);
 
 $sql = "SELECT DISTINCT specialties.sname
 FROM doctor
@@ -42,7 +48,7 @@ $result = $mysqli->query($sql);
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
 
-
+  <link href="assets/css/header.css" rel="stylesheet">
   <link href="assets/css/patient.css" rel="stylesheet">
   <!-- TIMER FUNCTION -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -94,7 +100,7 @@ $result = $mysqli->query($sql);
       <div class="col col-xl-10">
         <div class="card" style="border-radius: 1rem; background-color: white;">
         <div class="card-body p-4 p-lg-12">
-        <h3>Patient List</h3>
+        <b><h4>Patient List - <?php echo $rowCount;?></b></h4>
           <hr class="app"></hr>
           <div class="table-responsive">
           <table class="table">

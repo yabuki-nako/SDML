@@ -8,9 +8,18 @@ if(!isset($_SESSION["docloggedin"]) || $_SESSION["docloggedin"] !== true){
   header("location: doctor_login.php");
   exit;
 }
+$docid = $_SESSION['docid'];
+$sql2 = "SELECT appointments.appointment_ID, patient_detail.pname, patient_detail.pID, patient_detail.email,
+appointments.appDate, docsched.Time_schedule, appointments.App_status 
+FROM appointments 
+INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN patient_detail ON appointments.pId = patient_detail.pId  
+INNER JOIN docsched ON appointments.appTime = docsched.appTime 
+WHERE (App_status ='Done' OR App_status ='Accepted' or App_status = 'Pending')
+      AND doctor.docid = $docid";
+$result2 = $mysqli->query($sql2);
+$rowCount = mysqli_num_rows($result2);
 
-$drug_Modal = "";
-$drugModal_err = "";
 
 $sql = "SELECT DISTINCT specialties.sname
 FROM doctor
@@ -275,7 +284,7 @@ function hideLoadingOverlay() {
       <div class="col col-xl-10">
         <div class="card" style="border-radius: 1rem; background-color: white;">
         <div class="card-body p-4 p-lg-12">
-        <h3>Your Appointments</h3>
+        <h4><b>Total Appointment - <?php echo $rowCount;?></b></h4>
           <hr class="app"></hr>
           <div class="table-responsive">
           <table class="table">
@@ -327,7 +336,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $limit = 15; // Number of rows per page
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1; // Get current page from URL, default is 1
 $offset = ($page - 1) * $limit; // Calculate offset
-// Loop through the result set and generate table rows
+
 $totalResult = $mysqli->query("SELECT COUNT(*) as count FROM appointments 
                                INNER JOIN doctor ON appointments.docid = doctor.docid
                                INNER JOIN patient_detail ON appointments.pId = patient_detail.pId  
@@ -363,13 +372,14 @@ if ($result1->num_rows > 0) {
     if ($row['App_status'] == 'Pending') {
       echo "<form method='post'>";
       echo "<input type='hidden' name='email' value='" . $row['email'] . "'>";
+      echo "<input type='hidden' name='docname' value='" . $_SESSION["docname"]. "'>";
       echo "<input type='hidden' name='appointmentID' value='" . $row['appointment_ID'] . "'>";
       echo "<input type='hidden' name='pname' value='" . $row['pname'] . "'>"; // Add hidden input for pname
       echo "<input type='hidden' name='appDate' value='" . $row['appDate'] . "'>"; // Add hidden input for appDate
       echo "<input type='hidden' name='Time_schedule' value='" . $row['Time_schedule'] . "'>"; // Add hidden input for Time_schedule
       echo "<div class='button-row'>"; // Start of the second line
-      echo "<button type='submit' name='accept' class='btn btn-primary btn-done' onclick=\"collectData('" . $row['appointment_ID'] . "', '" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Accept</button>";
-      echo "<button type='submit' name='cancel' class='btn btn-danger btn-cancel' onclick=\"collectData1('" . $row['appointment_ID'] . "', '" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Cancel</button>";
+      echo "<button type='submit' name='accept' class='btn btn-primary btn-done' onclick=\"collectData('" . $row['appointment_ID'] . "', '" . $_SESSION["docname"] . "','" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Accept</button>";
+      echo "<button type='submit' name='cancel' class='btn btn-danger btn-cancel' onclick=\"collectData1('" . $row['appointment_ID'] . "', '" . $_SESSION["docname"] . "','" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Cancel</button>";
       echo "</div>"; // End of the second line
       echo "</form>";
     } elseif ($row['App_status'] == 'Accepted') {
@@ -416,7 +426,7 @@ echo "<tr><td colspan='6'>No data available</td></tr>";
 </nav>
 <script>
 
-function collectData(appointmentID, pname, email, appDate, Time_schedule) {
+function collectData(appointmentID, docname, pname, email, appDate, Time_schedule) {
     // Send data to PHP script via AJAX
     showLoadingOverlay();
     $.ajax({
@@ -424,6 +434,7 @@ function collectData(appointmentID, pname, email, appDate, Time_schedule) {
         url: "send_email.php", // Path to your PHP script
         data: {
             appointmentID: appointmentID,
+            docname: docname,
             email: email,
             pname: pname,
             appDate: appDate,
@@ -440,19 +451,20 @@ function collectData(appointmentID, pname, email, appDate, Time_schedule) {
         }
     });
 }
-    function collectData1(appointmentID, pname, email, appDate, Time_schedule) {
+    function collectData1(appointmentID, docname, pname, email, appDate, Time_schedule) {
       // Send data to PHP script via AJAX
       showLoadingOverlay();
       $.ajax({
           type: "POST",
           url: "send_email1.php", // Path to your PHP script
           data: {
-              appointmentID: appointmentID,
-              email: email,
-              pname: pname,
-              appDate: appDate,
-              Time_schedule: Time_schedule
-          },
+            appointmentID: appointmentID,
+            docname: docname,
+            email: email,
+            pname: pname,
+            appDate: appDate,
+            Time_schedule: Time_schedule
+        },
           success: function(response) {
             hideLoadingOverlay();
               // alert("Email3 sent!"); // Notify user if email is sent successfully

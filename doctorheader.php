@@ -1,5 +1,6 @@
-
-
+<?php
+    $activePage = basename($_SERVER['PHP_SELF']);
+?>
 <header id="header" class="header d-flex align-items-center">
 
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
@@ -11,15 +12,15 @@
   <nav id="navbar" class="navbar">
         <ul>  
           <!-- <li ><a href="welcomedoctor.php">Home</a></li> -->
-          <li><a href="Doctor_Appointment_List.php">Home</a></li>
-          <li><a href="Doctor_Patient_List.php">Patient List</a></li>
-          <li><a href="medicalhistory.php">Appointment History</a></li>
+          <li <?php if($activePage == 'Doctor_Appointment_List.php') echo 'class="active"'; ?>><a href="Doctor_Appointment_List.php">Home</a></li>
+          <li <?php if($activePage == 'Doctor_Patient_List.php') echo 'class="active"'; ?>><a href="Doctor_Patient_List.php">Patient List</a></li>
+          <li <?php if($activePage == 'medicalhistory.php') echo 'class="active"'; ?>><a href="medicalhistory.php">Appointment History</a></li>
           <li class="dropdown"><a href="#"><span>Profile</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
             <ul>
-              <li><a data-bs-toggle="modal" data-bs-target="#userdetail">View Account details</a></li> 
+              <li ><a data-bs-toggle="modal" data-bs-target="#userdetail">View Account details</a></li> 
 
-              <li><a href="docpassreset.php">Reset Password</a></li>    
-              <li><a href="logout.php">Log Out</a></li>
+              <li <?php if($activePage == 'docpassreset.php') echo 'class="active"'; ?>><a href="docpassreset.php">Reset Password</a></li>    
+              <li <?php if($activePage == 'logout.php') echo 'class="active"'; ?>><a href="logout.php">Log Out</a></li>
             </ul>
           </li>
         </ul>

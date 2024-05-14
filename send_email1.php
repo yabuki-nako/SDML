@@ -9,6 +9,7 @@ use PHPMailer\PHPMailer\Exception;
 // Collect data sent via POST
 $appointmentID = $_POST['appointmentID'];
 $pname = $_POST['pname'];
+$docname = $_POST['docname'];
 $email = $_POST['email'];
 $appDate = $_POST['appDate'];
 $Time_schedule = $_POST['Time_schedule'];
@@ -30,7 +31,24 @@ $mail->Port = 587;
 $mail->setFrom('Saint.Dominic4027@gmail.com', 'Clinic Test'); // Sender's email and name
 $mail->addAddress($email, $pname); 
 $mail->Subject = 'Cancelled Appointment';
-$mail->Body = " CANCELLLEEEDDDDDD Appointment ID: $appointmentID\nPatient Name: $pname\nAppointment Date: $appDate\nTime Schedule: $Time_schedule";
+$mail->Body = "
+We regret to inform you that due to unforeseen circumstances, Dr. $docname cancelled your upcoming appointment. We apologize for any inconvenience this may cause and are committed to rescheduling your appointment at a convenient time for you.
+
+Appointment Details:
+
+Date: $appDate
+Time: $Time_schedule
+
+Our team will reach out to assist you scheduling a new appointment. 
+If you prefer, you can contact us directly at 0918 935 3547 
+or email at us saintdominiclaboratory@gmail.com to discuss alternative dates and times.
+
+We apologize for any inconvenience and appreciate your understanding.
+
+Thank you for your patience and cooperation.
+
+IMAGE
+";
 
 // Send email
 if (!$mail->send()) {
