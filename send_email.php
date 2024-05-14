@@ -29,7 +29,7 @@ $mail->Port = 587;
 // Set email parameters
 $mail->setFrom('Saint.Dominic4027@gmail.com', 'Clinic Test'); // Sender's email and name
 $mail->addAddress($email, $pname); 
-$mail->Subject = 'Appointment Details';
+$mail->Subject = 'Appointment Confnirmation';
 $mail->Body = "Appointment ID: $appointmentID\nPatient Name: $pname\nAppointment Date: $appDate\nTime Schedule: $Time_schedule";
 
 // Send email

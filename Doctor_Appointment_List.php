@@ -197,7 +197,7 @@ switch ($action) {
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
@@ -299,8 +299,12 @@ require_once "assets/PHPMailer/src/PHPMailer.php";
 require_once "assets/PHPMailer/src/SMTP.php";
 require_once "assets/PHPMailer/src/Exception.php";
 
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Check which button is clicked
   if (isset($_POST["accept"])) {
@@ -320,8 +324,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mysqli->query($updateQuery);
   }
 }
-
+$limit = 15; // Number of rows per page
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1; // Get current page from URL, default is 1
+$offset = ($page - 1) * $limit; // Calculate offset
 // Loop through the result set and generate table rows
+$totalResult = $mysqli->query("SELECT COUNT(*) as count FROM appointments 
+                               INNER JOIN doctor ON appointments.docid = doctor.docid
+                               INNER JOIN patient_detail ON appointments.pId = patient_detail.pId  
+                               INNER JOIN docsched ON appointments.appTime = docsched.appTime 
+                               WHERE (App_status ='Done' OR App_status ='Accepted' or App_status = 'Pending')
+                                     AND doctor.docid = $docid");
+$totalRow = $totalResult->fetch_assoc();
+$totalRows = $totalRow['count'];
+$totalPages = ceil($totalRows / $limit); // Calculate total pages
+
 $sql1 = "SELECT appointments.appointment_ID, patient_detail.pname, patient_detail.pID, patient_detail.email,
 appointments.appDate, docsched.Time_schedule, appointments.App_status 
 FROM appointments 
@@ -329,7 +345,9 @@ INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN patient_detail ON appointments.pId = patient_detail.pId  
 INNER JOIN docsched ON appointments.appTime = docsched.appTime 
 WHERE (App_status ='Done' OR App_status ='Accepted' or App_status = 'Pending')
-      AND doctor.docid = $docid";
+      AND doctor.docid = $docid
+ORDER BY appointments.appointment_ID DESC
+LIMIT $limit OFFSET $offset";
 $result1 = $mysqli->query($sql1);
 
 if ($result1->num_rows > 0) {
@@ -343,7 +361,7 @@ if ($result1->num_rows > 0) {
     echo "<td>" . $row['App_status'] . "</td>";
     echo "<td>";
     if ($row['App_status'] == 'Pending') {
-      echo "<form method='post' id='statusemail'>";
+      echo "<form method='post'>";
       echo "<input type='hidden' name='email' value='" . $row['email'] . "'>";
       echo "<input type='hidden' name='appointmentID' value='" . $row['appointment_ID'] . "'>";
       echo "<input type='hidden' name='pname' value='" . $row['pname'] . "'>"; // Add hidden input for pname
@@ -379,6 +397,23 @@ if ($result1->num_rows > 0) {
 echo "<tr><td colspan='6'>No data available</td></tr>";
 }
 ?>
+</table>
+<nav>
+  <ul class="pagination">
+    <?php
+    if ($page > 1) {
+        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">Previous</a></li>';
+    }
+    for ($i = 1; $i <= $totalPages; $i++) {
+        $active = $i == $page ? 'active' : '';
+        echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+    }
+    if ($page < $totalPages) {
+        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next</a></li>';
+    }
+    ?>
+  </ul>
+</nav>
 <script>
 
 function collectData(appointmentID, pname, email, appDate, Time_schedule) {
@@ -396,7 +431,7 @@ function collectData(appointmentID, pname, email, appDate, Time_schedule) {
         },
         success: function(response) {
           hideLoadingOverlay();
-            alert("Email sent!"); // Notify user if email is sent successfully
+            // alert("Email sent!"); // Notify user if email is sent successfully
 
         },
         error: function(xhr, status, error) {
@@ -420,8 +455,7 @@ function collectData(appointmentID, pname, email, appDate, Time_schedule) {
           },
           success: function(response) {
             hideLoadingOverlay();
-            location.reload()
-              alert("Email sent!"); // Notify user if email is sent successfully
+              // alert("Email3 sent!"); // Notify user if email is sent successfully
 
           },
           error: function(xhr, status, error) {
