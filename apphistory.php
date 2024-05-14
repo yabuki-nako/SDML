@@ -99,12 +99,24 @@ $rowCount = mysqli_num_rows($result)
 </tbody>
 <?php
 $pId = $_SESSION['id'];
+$limit = 15; // Number of rows per page
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1; // Get current page from URL, default is 1
+$offset = ($page - 1) * $limit; // Calculate offset
+$totalResult = $mysqli->query("SELECT COUNT(*) as count FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail ON appointments.pId = patient_detail.pId INNER JOIN docsched ON appointments.appTime = docsched.appTime
+where patient_detail.pId = $pId");
+$totalRow = $totalResult->fetch_assoc();
+$totalRows = $totalRow['count'];
+$totalPages = ceil($totalRows / $limit); 
+
+// Calculate total pages
 // Loop through the result set and generate table rows
 $sql1 = "	SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
 appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail ON appointments.pId = patient_detail.pId INNER JOIN docsched ON appointments.appTime = docsched.appTime
-where patient_detail.pId = $pId";
-$result1 = $mysqli->query($sql1); 
+where patient_detail.pId = $pId ORDER BY appointments.appointment_ID desc
+LIMIT $limit OFFSET $offset";
+$result1 = $mysqli->query($sql1);
 
 if ($result1->num_rows > 0) {
     while ($row = $result1->fetch_assoc()) {
@@ -143,7 +155,22 @@ if ($result1->num_rows > 0) {
 
 ?>
 </table>
-
+<nav>
+  <ul class="pagination">
+    <?php
+    if ($page > 1) {
+        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">Previous</a></li>';
+    }
+    for ($i = 1; $i <= $totalPages; $i++) {
+        $active = $i == $page ? 'active' : '';
+        echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+    }
+    if ($page < $totalPages) {
+        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next</a></li>';
+    }
+    ?>
+  </ul>
+</nav>
 </div>
                   </div>
          

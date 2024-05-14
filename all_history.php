@@ -10,9 +10,12 @@ if(!isset($_SESSION["adminloggedin"]) || $_SESSION["adminloggedin"] !== true){
     exit;
 }
 $pId1 = $_SESSION['id'];
-$sql = "	SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
-appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
-INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail ON appointments.pId = patient_detail.pId INNER JOIN docsched ON appointments.appTime = docsched.appTime";
+
+
+$sql = "SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
+appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status FROM appointments INNER JOIN doctor 
+ON appointments.docid = doctor.docid INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail 
+ON appointments.pId = patient_detail.pId INNER JOIN docsched ON appointments.appTime = docsched.appTime";
 
 $result = $mysqli->query($sql);
 $rowCount = mysqli_num_rows($result)
@@ -77,7 +80,7 @@ $rowCount = mysqli_num_rows($result)
         <div class="card" style="border-radius: 1rem; background-color: white;">
         <div class="card-body p-4 p-lg-12">
         <h3>List of All Appointment</h3>
-        <h4>Total Appointment - <?php echo $rowCount;?></h4>
+        <h4><b>Total Appointment - <?php echo $rowCount;?></b></h4>
           <hr class="app"></hr>
           <div class="table-responsive">
           <table class="table table-striped table-default ">
@@ -98,11 +101,27 @@ $rowCount = mysqli_num_rows($result)
 
 </tbody>
 <?php
-$pId = $_SESSION['id'];
+$pId1 = $_SESSION['id'];
+$limit = 15; // Number of rows per page
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1; // Get current page from URL, default is 1
+$offset = ($page - 1) * $limit; 
+
+$totalResult = $mysqli->query("SELECT COUNT(*) as count FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail 
+ON appointments.pId = patient_detail.pId INNER JOIN docsched ON appointments.appTime = docsched.appTime");
+
+$totalRow = $totalResult->fetch_assoc();
+$totalRows = $totalRow['count'];
+$totalPages = ceil($totalRows / $limit); 
+
 // Loop through the result set and generate table rows
 $sql1 = "	SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
 appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
-INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail ON appointments.pId = patient_detail.pId INNER JOIN docsched ON appointments.appTime = docsched.appTime ORDER BY appointments.appointment_ID desc";
+INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail 
+ON appointments.pId = patient_detail.pId INNER JOIN docsched ON appointments.appTime = docsched.appTime ORDER BY appointments.appointment_ID desc 
+LIMIT $limit OFFSET $offset";
+
+$result = $mysqli->query($sql);
 $result1 = $mysqli->query($sql1); 
 
 if ($result1->num_rows > 0) {
@@ -129,7 +148,23 @@ if ($result1->num_rows > 0) {
 }
 
 ?>
-
+</table>
+<nav>
+  <ul class="pagination">
+    <?php
+    if ($page > 1) {
+        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">Previous</a></li>';
+    }
+    for ($i = 1; $i <= $totalPages; $i++) {
+        $active = $i == $page ? 'active' : '';
+        echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+    }
+    if ($page < $totalPages) {
+        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next</a></li>';
+    }
+    ?>
+  </ul>
+</nav>
 </div></div>
                   </div>
          

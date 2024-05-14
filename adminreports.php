@@ -9,11 +9,12 @@ if(!isset($_SESSION["adminloggedin"]) || $_SESSION["adminloggedin"] !== true){
     header("location: admin_login.php");
     exit;
 }
-$sql1 = "SELECT specialties.sname AS department, COUNT(*) AS bookings_count
-        FROM appointments
-        INNER JOIN doctor ON appointments.docid = doctor.docid
-        INNER JOIN specialties ON doctor.specialties = specialties.id
-        GROUP BY specialties.sname";
+$sql1 = "SELECT specialties.sname AS department, COUNT(*) AS bookings_count 
+FROM appointments
+INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id 
+WHERE App_status = 'done'
+GROUP BY specialties.sname;";
 
 $result1 = $mysqli->query($sql1);
 
@@ -35,8 +36,8 @@ while ($row2 = $result2->fetch_assoc()) {
 }
 
 $sql3 = "SELECT MONTH(appDate) AS month_number, COUNT(*) AS total_appointments
-        FROM appointments
-        GROUP BY MONTH(appDate)";
+FROM appointments WHERE App_status = 'done'
+GROUP BY MONTH(appDate)";
 
 $result3 = $mysqli->query($sql3);
 
@@ -46,7 +47,7 @@ while ($row3 = $result3->fetch_assoc()) {
 }
 
 $sql4 = "SELECT YEAR(appDate) AS appointment_year, COUNT(*) AS total_appointments
-        FROM appointments
+        FROM appointments WHERE App_status = 'done'
         GROUP BY YEAR(appDate)";
 
 $result4 = $mysqli->query($sql4);
@@ -62,7 +63,7 @@ $sql5 = "SELECT specialties.sname AS department,
                 COUNT(*) AS bookings_count
         FROM appointments
         INNER JOIN doctor ON appointments.docid = doctor.docid
-        INNER JOIN specialties ON doctor.specialties = specialties.id
+        INNER JOIN specialties ON doctor.specialties = specialties.id WHERE App_status = 'done'
         GROUP BY specialties.sname, MONTH(appointments.appDate)";
 
 $result5 = $mysqli->query($sql5);
@@ -76,13 +77,9 @@ specialties.sname AS department,
 MONTH(appointments.appDate) AS month_number, 
 YEAR(appointments.appDate) AS appointment_year,
 COUNT(*) AS bookings_count
-FROM 
-appointments
-INNER JOIN 
-doctor ON appointments.docid = doctor.docid
-INNER JOIN 
-specialties ON doctor.specialties = specialties.id
-GROUP BY 
+FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id 
+WHERE App_status = 'done'GROUP BY 
 specialties.sname, MONTH(appointments.appDate), YEAR(appointments.appDate)";
 
 $result6 = $mysqli->query($sql6);
@@ -155,8 +152,8 @@ $mysqli->close();
             <div class="card" style="border-radius: 1rem; background-color: white;">
                 <div class="card-body p-4 p-lg-12">                   
                 <div class="mt-0 mb-3">
-                <h4><b>Today's Date and Time:</b>
-                <div class="d-flex"> <?php echo $today?>&nbsp;||&nbsp;<div id="time"></h4><br>
+                <h3><b>Today's Date and Time:</b>
+                <div class="d-flex"> <?php echo $today?>&nbsp;||&nbsp;<div id="time"></h3><br>
                 </div>
                     <h3><strong>Overall Reports: </strong></h3> 
                     <div id="chart1"></div><br>
@@ -165,7 +162,7 @@ $mysqli->close();
                     <div id="chart4"></div><br>
                     <div id="chart5"></div><br><br>
                     <div class="yearDropdown">
-                    <i>Drop down for <strong>Chart 6</strong></i>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i>Change year <strong>Chart 6</strong></i>&nbsp;&nbsp;&nbsp;&nbsp;
                     <div id="yearDropdown"></div>
                     </div>   
                     <div id="chart6"></div>
@@ -402,7 +399,7 @@ chart5.draw(dataTable5, options5);
 
 // Dropdown menu for selecting the year
 var yearDropdown = document.getElementById('yearDropdown');
-    var currentYear = new Date().getFullYear(); // Get the current year
+    var currentYear = new Date().getFullYear() + 1; // Get the current year
     var selectHTML = '<select id="yearSelect">';
     for (var year = currentYear; year >= 2023; year--) { // Loop from current year to 2023
         selectHTML += '<option value="' + year + '">' + year + '</option>';

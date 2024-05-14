@@ -75,7 +75,7 @@ $rowCount = mysqli_num_rows($result)
         <div class="card" style="border-radius: 1rem; background-color: white;">
         <div class="card-body p-4 p-lg-12">
         <h3>List of All Patient</h3>
-        <h4>Total patient - <?php echo $rowCount;?></h4>
+        <h4><b>Total patient - <?php echo $rowCount;?></b></h4>
           <hr class="app"></hr>
           <div class="table-responsive">
           <table class="table table-striped table-default ">
