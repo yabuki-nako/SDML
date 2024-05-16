@@ -303,3 +303,13 @@ setInterval(function() {
   var currentTimeString = currentHours + ":" + currentMinutes + ":" + currentSeconds + " " + timeOfDay;
   document.getElementById("timer").innerHTML = currentTimeString;
 }, 1000);
+
+document.getElementById('docid').addEventListener('change', function() {
+  var servicesDiv = document.getElementById('services');
+  if (this.value == '49') {
+    servicesDiv.style.display = 'block';
+  } else {
+    servicesDiv.style.display = 'none';
+  }
+}); 
+

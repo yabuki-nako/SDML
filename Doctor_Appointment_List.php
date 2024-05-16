@@ -295,6 +295,9 @@ function hideLoadingOverlay() {
       <th scope="col">Date</th>
       <th scope="col">Time</th>
       <th scope="col">Appointment Status</th>
+      <?php if ($_SESSION['medtech'] == 1): ?>
+            <th scope="col">Services</th>
+        <?php endif; ?>
       <th scope="col"> Update Status</th>
       <th scope="col"> Medical history</th>
       <th scope="col"> Additional Documents</th>
@@ -348,7 +351,7 @@ $totalRows = $totalRow['count'];
 $totalPages = ceil($totalRows / $limit); // Calculate total pages
 
 $sql1 = "SELECT appointments.appointment_ID, patient_detail.pname, patient_detail.pID, patient_detail.email,
-appointments.appDate, docsched.Time_schedule, appointments.App_status 
+appointments.appDate, docsched.Time_schedule, appointments.service1, appointments.service2, appointments.service3,appointments.App_status 
 FROM appointments 
 INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN patient_detail ON appointments.pId = patient_detail.pId  
@@ -368,6 +371,10 @@ if ($result1->num_rows > 0) {
     echo "<td>" . $row['appDate'] . "</td>";
     echo "<td>" . $row['Time_schedule'] . "</td>";
     echo "<td>" . $row['App_status'] . "</td>";
+     if ($_SESSION['medtech'] == 1):
+    echo  "<td>" . $row['service1'] . "<br>" . $row['service2'] . "<br>" . $row['service3'] . "</td>";  
+    endif; 
+    // echo "<td>" . $row['service1'] . "<br>" . $row['service2'] . "<br>" . $row['service3'] . "</td>";
     echo "<td>";
     if ($row['App_status'] == 'Pending') {
       echo "<form method='post'>";

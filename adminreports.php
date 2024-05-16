@@ -106,7 +106,12 @@ $mysqli->close();
   <meta content="" name="description">
   <meta content="" name="keywords">
 
- 
+  <style>
+        .card {
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+    </style>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -133,9 +138,17 @@ $mysqli->close();
         type: 'GET',
         success: function(data) {
           $('#time').text(data); 
+          
         }
       });
     }
+    $(window).on('resize', function() {
+    drawCharts();
+});
+$(window).resize(function(){
+    drawCharts();
+});
+
   </script>
   <!-- script for charts -->
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -145,7 +158,7 @@ $mysqli->close();
 <body >
 
 <?php include 'adminheader.php';?>
-<section class="vh-110">
+<section class="vh-110 mt-2">
 <div class ="mb-5">
     <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col col-xl-10">
@@ -200,16 +213,22 @@ function drawCharts() {
     var dataTable2 = new google.visualization.DataTable();
     dataTable2.addColumn('string', 'Gender');
     dataTable2.addColumn('number', 'Number of Patients');
+    dataTable2.addColumn({type: 'string', role: 'style'});
+
     for (var j = 0; j < data2.length; j++) {
         var gender = data2[j].pGender === 'Male' ? 'Male' : 'Female';
         var count = parseInt(data2[j].patient_count);
-        var row2 = [gender, count];
+        var color = gender === 'Male' ? 'color: blue' : 'color: pink';
+        var row2 = [gender, count, color];
         dataTable2.addRow(row2);
     }
+
     var options2 = {
         title: 'Number of Patients by Gender',
-        bars: 'horizontal'
+        bars: 'horizontal',
+        legend: { position: 'none' }
     };
+
     var chart2 = new google.visualization.BarChart(document.getElementById('chart2'));
     chart2.draw(dataTable2, options2);
     

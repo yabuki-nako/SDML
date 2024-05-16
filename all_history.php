@@ -152,13 +152,46 @@ if ($result1->num_rows > 0) {
 <nav>
   <ul class="pagination">
     <?php
+    // Determine the start and end of the page range to display
+    $start = max(1, $page - 2);
+    $end = min($totalPages, $page + 2);
+    
+    // Adjust start and end if close to the beginning or end
+    if ($page <= 3) {
+        $end = min(5, $totalPages);
+    }
+    if ($page > $totalPages - 3) {
+        $start = max(1, $totalPages - 4);
+    }
+    
+    // Previous button
     if ($page > 1) {
         echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">Previous</a></li>';
     }
-    for ($i = 1; $i <= $totalPages; $i++) {
+    
+    // First page button if not in range
+    if ($start > 1) {
+        echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>';
+        if ($start > 2) {
+            echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+        }
+    }
+    
+    // Page number buttons
+    for ($i = $start; $i <= $end; $i++) {
         $active = $i == $page ? 'active' : '';
         echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
     }
+    
+    // Last page button if not in range
+    if ($end < $totalPages) {
+        if ($end < $totalPages - 1) {
+            echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+        }
+        echo '<li class="page-item"><a class="page-link" href="?page=' . $totalPages . '">' . $totalPages . '</a></li>';
+    }
+    
+    // Next button
     if ($page < $totalPages) {
         echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next</a></li>';
     }

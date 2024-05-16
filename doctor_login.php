@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Validate the email format
         // if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             // Prepare a select statement
-            $sql = "SELECT doctor.docid, doctor.docemail,doctor.docpassword,doctor.docname, doctor.doctel, specialties.sname
+            $sql = "SELECT doctor.docid, doctor.docemail,doctor.docpassword,doctor.docname, doctor.doctel, specialties.sname , doctor.medtech
             FROM doctor
             JOIN specialties ON doctor.specialties = specialties.id WHERE docemail = ?";
 
@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Check if email exists, if yes then verify password
                     if ($stmt->num_rows == 1) {
                         // Bind result variables
-                        $stmt->bind_result($docid, $docemail, $docpassword,  $docname,$doctel, $sname);
+                        $stmt->bind_result($docid, $docemail, $docpassword,  $docname,$doctel, $sname, $medtech);
                         if ($stmt->fetch()) {
                             if ($docpassword) {
                                 // Password is correct, so start a new session
@@ -66,9 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 $_SESSION["docid"] = $docid;
                                 $_SESSION["docname"] = $docname;
                                 $_SESSION["docemail"] = $docemail;
-
+                                $_SESSION["medtech"] = $medtech;
                                 $_SESSION["doctel"] = $doctel;
-
                                 $_SESSION["sname"] = $sname;  
                                 // Redirect user to welcome page
                                 header("location: Doctor_Appointment_List.php");
