@@ -12,6 +12,10 @@ $pname = $_POST['pname'];
 $email = $_POST['email'];
 $docname = $_POST['docname'];
 $appDate = $_POST['appDate'];
+$sname = $_POST['sname'];
+$service1 = $_POST['service1'];
+$service2 = $_POST['service2'];
+$service3 = $_POST['service3'];
 $Time_schedule = $_POST['Time_schedule'];
 
 // Create a PHPMailer instance
@@ -30,7 +34,7 @@ $mail->Port = 587;
 // Set email parameters
 $mail->setFrom('Saint.Dominic4027@gmail.com', 'Clinic Test'); // Sender's email and name
 $mail->addAddress($email, $pname); 
-$mail->Subject = 'Appointment Confnirmation';
+$mail->Subject = 'Appointment Confirmation';
 // $mail->Body = "Appointment ID: $appointmentID\nPatient Name: $pname\nAppointment Date: $appDate\nTime Schedule: $Time_schedule";
 $mail->Body = "We are pleased to confirm your appointment at St. Dominic Medical Laboratory and Drug Testing Center located at 146 Manila S Rd, Calamba, 4027 Laguna.
 
@@ -38,14 +42,29 @@ Appointment Details:
 
 Date: $appDate
 Time: $Time_schedule
-Doctor: Dr. $docname
+";
 
-Please arrive 10 minutes prior to your scheduled time. 
+if($service1 == null && $service2 == null && $service3 == null) {
+$mail->Body .= "Service/s Scheduled: 
+$sname
+Please arrive 10 minutes prior to your scheduled time.
 
 If you need to reschedule or have any questions regarding your appointment, feel free to contact us at 0918 935 3547 or email us at saintdominiclaboratory@gmail.com
 
-We look forward to seeing you.
-<img src='cid:footer' alt='St. Dominic Medical Laboratory'>";
+We look forward to seeing you.";
+} else {
+$mail->Body .= "Service/s Scheduled: 
+$service1 
+$service2 
+$service3
+
+Please arrive 10 minutes prior to your scheduled time.
+
+If you need to reschedule or have any questions regarding your appointment, feel free to contact us at 0918 935 3547 or email us at saintdominiclaboratory@gmail.com
+
+We look forward to seeing you.";
+}
+
 $mail->AddEmbeddedImage('assets\img\emailPic.jpg','footer', 'Picture');
 
 

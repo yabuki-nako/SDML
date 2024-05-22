@@ -79,10 +79,10 @@
     <div class="container position-relative mb-5 mt-5">
       <div class="row gy-5" data-aos="fade-in">
         <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center text-center text-lg-start">
-          <h2>Affordable Medical Services <span  >Without Compromising The Quality Of It.</span></h2>
+          <h2>Affordable Medical Services <span >Without Compromising The Quality Of It.</span></h2>
           <p>SDML commits to give aid to the general medical practice and support proper diagnosis by providing quality and economical services; ensuring accurate, consistent, and reliable results; and by promoting solidarity in healthcare for all.</p>
           <div class="d-flex justify-content-center justify-content-lg-start">
-            <a href="login.php" class="btn-get-started"> Schedule an appointment</a>
+            <a href="login.php" class="btn-get-started">Schedule an appointment</a>
           </div>
         </div>
         <div class="col-lg-6 order-1 order-lg-2">
@@ -129,11 +129,11 @@
                     </div> -->
                 </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev" hidden>
                     <!-- <span class="carousel-control-prev-icon" aria-hidden="true"></span> -->
                     <span class="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#header-carousel" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#header-carousel" data-bs-slide="next" hidden>
                     <!-- <span class="carousel-control-next-icon" aria-hidden="true"></span> -->
                     <span class="visually-hidden">Next</span>
                 </button>

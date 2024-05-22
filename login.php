@@ -20,7 +20,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     // Check if username is empty
     if(empty(trim($_POST["email"]))){
-        $email_err = "Please enter email.";
+        $email_err = "Please enter Email Address.";
     } else{
         $email = trim($_POST["email"]);
     }
@@ -74,12 +74,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             header("location: otp.php");
                         } else{
                             // Password is not valid, display a generic error message
-                            $login_err = "Invalid email or password.";
+                            $login_err = "Invalid Email Address or password.";
                         }
                     }
                 } else{
                     // Username doesn't exist, display a generic error message
-                    $login_err = "Invalid username or password.";
+                    $login_err = "Invalid Email Address or password.";
                 }
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
@@ -148,7 +148,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
           <li><a href="index.php">Home</a></li>
           <li class="dropdown"><a href="#"><span>Account</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
             <ul>   
-              <li><a href="signup.php">Signup</a></li>
+              <li><a href="signup.php">Sign up</a></li>
             </ul>
           </li>
         </ul>
@@ -187,7 +187,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                   <h5 class="fw-normal mb-3 pb-3" ></h5>
 
                   <div class="form-outline mb-4">
-                  <label class="form-label" for="form2Example17">Email</label>
+                  <label class="form-label" for="form2Example17">Email Address</label>
                   <input type="text" id="email" name="email" class="form-control form-control-lg <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>">
                     <span class="invalid-feedback"><?php echo $email_err; ?></span>
                   </div>

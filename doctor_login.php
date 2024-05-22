@@ -19,7 +19,7 @@ $email_err = $password_err = $login_err = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if email is empty
     if (empty(trim($_POST["email"]))) {
-        $email_err = "Please enter email.";
+        $email_err = "Please enter Email Address.";
     } else {
         $email = trim($_POST["email"]);
     }
@@ -74,12 +74,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 exit;
                             } else {
                                 // Password is not valid, display a generic error message
-                                $login_err = "Invalid emaild or password.";
+                                $login_err = "Invalid Email Address or Password.";
                             }
                         }
                     } else {
                         // Email doesn't exist, display a generic error message
-                        $login_err = "Invalid emaidsl or password.";
+                        $login_err = "Invalid Email address or password.";
                     }
                 } else {
                     echo "Oops! Something went wrong. Please try again later.";
@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->close();
             }
         } else {
-            $login_err = "Invalid email format.";
+            $login_err = " Data doesn't exist";
         }
     }
 

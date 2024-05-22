@@ -22,7 +22,7 @@ if ($result->num_rows > 0) {
     echo "</tbody>";
     echo "</table>";
 } else {
-    echo "No PDF files uploaded yet.";
+    echo "No PDF, PNG, JPG files uploaded yet.";
 }
 
 $mysqli->close();

@@ -80,12 +80,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 <head>
 <link rel = "icon" href = 
-"assets/img/icon.png" 
+"assets/img/sdml.png" 
         type = "image/x-icon">
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>St. Dominic Medical Laboratory</title>  
+  <title>St. Dominic Medical Laboratory</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 

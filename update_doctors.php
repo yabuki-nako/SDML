@@ -63,12 +63,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
 <link rel = "icon" href = 
-"assets/img/icon.png" 
+"assets/img/sdml.png" 
         type = "image/x-icon">
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Makiling Clinic</title>
+  <title>St. Dominic Medical Laboratory</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -111,6 +111,8 @@ function loadSelectedOption() {
       if (this.readyState == 4 && this.status == 200) {
         var data = JSON.parse(this.responseText);
         populateFields(data);
+        document.getElementById("updateBtn").disabled = false;
+
       }
     };
     xmlhttp.open("GET", "get_data.php?option=" + selectedOption, true);
@@ -187,7 +189,7 @@ while ($row = $result->fetch_assoc()) {
 
     
                   <div class="pt-1 mb-4">
-                    <input type="submit" class="btn btn-dark btn-lg" value="Update"><br><br>
+                    <input type="submit" class="btn btn-dark btn-lg" id="updateBtn" value="Update" disabled><br><br>
                   </div>
                 </form>
               </div>

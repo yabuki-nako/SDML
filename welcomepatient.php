@@ -148,7 +148,7 @@ if ($result3->num_rows > 0) {
     <div class="row">
     <div class="col">' ;
     if ($row['medtech'] == 1):
-      echo '<h5>Service Availed </h5>';
+      echo '<h5>Service/s Availed: </h5>';
       echo '<h4>'.$row['service1'];
       if (!empty($row['service2'])) {
           echo ', <br>'.$row['service2'];

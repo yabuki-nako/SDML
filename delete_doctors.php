@@ -12,26 +12,29 @@ if(!isset($_SESSION["adminloggedin"]) || $_SESSION["adminloggedin"] !== true){
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate and sanitize the selected docid
-    $selectedDocid = $_POST["specialty"];
-    // Perform further validation if needed
-    $selectedDocid = intval($selectedDocid);
+    if (isset($_POST["specialty"])) {
+      $selectedDocid = $_POST["specialty"];
+      // Perform further validation if needed
+      $selectedDocid = intval($selectedDocid);
 
-    // Delete the row based on the selected docid
-    $sql = "DELETE FROM doctor WHERE docid = ?";
-    $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("s", $selectedDocid);
+      // Delete the row based on the selected docid
+      $sql = "DELETE FROM doctor WHERE docid = ?";
+      $stmt = $mysqli->prepare($sql);
+      $stmt->bind_param("s", $selectedDocid);
 
-    try {
-        if ($stmt->execute()) {
-            $delete_err = "Successfully deleted";
-        } else {
-            // Handle unsuccessful deletion
-            // Add appropriate error message or redirection here
-        }
-    } catch (Exception $e) {
-        // Handle the exception and display an error message
-        $delete_err = "The doctor have an appointment";
-    }
+      try {
+          if ($stmt->execute()) {
+              $delete_err = "Doctor deleted";
+          } else {
+              $delete_err = "Not deleted";
+          }
+      } catch (Exception $e) {
+          // Handle the exception and display an error message
+          $delete_err = "The doctor has an appointment";
+      }
+  } else {
+      $delete_err = "Please select a Doctor.";
+  }
 }
 
 
@@ -45,12 +48,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
 <link rel = "icon" href = 
-"assets/img/icon.png" 
+"assets/img/sdml.png" 
         type = "image/x-icon">
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Makiling Clinic</title>
+  <title>St. Dominic Medical Laboratory</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -97,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="form-outline mb-4">
                     <label class="form-label" for="gender">Select Doctor that will be deleted</label><br>
                     <select name="specialty" class="form-control form-control-lg" onchange="loadSelectedOption()">
-  <option disabled selected>Select department</option>
+  <option disabled selected>Select Doctor</option>
   <?php
             $sql1 = "select * from doctor;";
             $result1 = $mysqli->query($sql1);

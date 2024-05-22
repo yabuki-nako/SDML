@@ -350,12 +350,13 @@ $totalRow = $totalResult->fetch_assoc();
 $totalRows = $totalRow['count'];
 $totalPages = ceil($totalRows / $limit); // Calculate total pages
 
-$sql1 = "SELECT appointments.appointment_ID, patient_detail.pname, patient_detail.pID, patient_detail.email,
+$sql1 = "SELECT appointments.appointment_ID, patient_detail.pname, patient_detail.pID, patient_detail.email,specialties.sname,
 appointments.appDate, docsched.Time_schedule, appointments.service1, appointments.service2, appointments.service3,appointments.App_status 
 FROM appointments 
 INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN patient_detail ON appointments.pId = patient_detail.pId  
-INNER JOIN docsched ON appointments.appTime = docsched.appTime 
+inner join specialties on doctor.specialties = specialties.id
+INNER JOIN docsched ON appointments.appTime = docsched.appTime
 WHERE (App_status ='Done' OR App_status ='Accepted' or App_status = 'Pending')
       AND doctor.docid = $docid
 ORDER BY appointments.appointment_ID DESC
@@ -383,10 +384,14 @@ if ($result1->num_rows > 0) {
       echo "<input type='hidden' name='appointmentID' value='" . $row['appointment_ID'] . "'>";
       echo "<input type='hidden' name='pname' value='" . $row['pname'] . "'>"; // Add hidden input for pname
       echo "<input type='hidden' name='appDate' value='" . $row['appDate'] . "'>"; // Add hidden input for appDate
-      echo "<input type='hidden' name='Time_schedule' value='" . $row['Time_schedule'] . "'>"; // Add hidden input for Time_schedule
+      echo "<input type='hidden' name='Time_schedule' value='" . $row['Time_schedule'] . "'>";
+      echo "<input type='hidden' name='sname' value='" . $row['sname'] . "'>";
+      echo "<input type='hidden' name='service1' value='" . $row['service1'] . "'>"; 
+      echo "<input type='hidden' name='service2' value='" . $row['service2'] . "'>";
+      echo "<input type='hidden' name='service3' value='" . $row['service3'] . "'>";
       echo "<div class='button-row'>"; // Start of the second line
-      echo "<button type='submit' name='accept' class='btn btn-primary btn-done' onclick=\"collectData('" . $row['appointment_ID'] . "', '" . $_SESSION["docname"] . "','" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Accept</button>";
-      echo "<button type='submit' name='cancel' class='btn btn-danger btn-cancel' onclick=\"collectData1('" . $row['appointment_ID'] . "', '" . $_SESSION["docname"] . "','" . $row['pname'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Cancel</button>";
+      echo "<button type='submit' name='accept' class='btn btn-primary btn-done' onclick=\"collectData('" . $row['appointment_ID'] . "', '" . $_SESSION["docname"] . "','" . $row['pname'] . "','" . $row['sname'] . "','" . $row['service1'] . "','" . $row['service2'] . "','" . $row['service3'] . "','" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Accept</button>";
+      echo "<button type='submit' name='cancel' class='btn btn-danger btn-cancel' onclick=\"collectData1('" . $row['appointment_ID'] . "', '" . $_SESSION["docname"] . "','" . $row['pname'] . "','" . $row['sname'] . "','" . $row['service1'] . "','" . $row['service2'] . "','" . $row['service3'] . "', '" . $row['email'] . "', '" . $row['appDate'] . "', '" . $row['Time_schedule'] . "')\">Cancel</button>";
       echo "</div>"; // End of the second line
       echo "</form>";
     } elseif ($row['App_status'] == 'Accepted') {
@@ -397,18 +402,35 @@ if ($result1->num_rows > 0) {
       echo "</div>"; // End of the second line
       echo "</form>";
     } 
-    echo "<td><button type='button' class='btn btn-success btn-accept' onclick=\"openModal('" . $row['appointment_ID'] . "', '" . $row['pID'] . "','" . $row['pname'] . "', '".$row['App_status']."','".$row['appDate']."')\" data-toggle='modal' data-target='#exampleModal'>Add Health Record</button>";
-    echo "<form action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "' method='post' enctype='multipart/form-data'>";
-    echo "<input type='hidden' name='action' value='other1'>";
-    echo "<input type='hidden' name='appointmentID' value='" . $row['appointment_ID'] . "'>"; // Add hidden input for appointment ID
-    echo "<td>";
-    echo "<div class='button-row'>";
-    echo "<input type='file' name='fileToUpload' id='fileToUpload' class='form-control'>";
-    echo "<input type='submit' value='Upload File' name='submit' class='btn btn-success btn-accept'>";
-    echo "</div>";  
-    echo "</td>";
-    echo "<td><button type='button' class='btn btn-success btn-accept' onclick=\"openModal1('" . $row['appointment_ID'] . "')\" data-toggle='modal' data-target='#fileupload'>View Files</button>";
-    echo "</form>";
+
+    if ($row['App_status'] ==='Pending' || ($row['App_status'] ==='Cancelled') || ($row['App_status'] ==='Accepted')) {
+      echo "<td><button type='button' class='btn btn-success btn-accept' onclick=\"openModal('" . $row['appointment_ID'] . "', '" . $row['pID'] . "','" . $row['pname'] . "', '".$row['App_status']."','".$row['appDate']."')\" data-toggle='modal' data-target='#exampleModal' disabled>Add Health Record</button>";
+      echo "<form action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "' method='post' enctype='multipart/form-data'>";
+      echo "<input type='hidden' name='action' value='other1'>";
+      echo "<input type='hidden' name='appointmentID' value='" . $row['appointment_ID'] . "'>"; // Add hidden input for appointment ID
+      echo "<td>";
+      echo "<div class='button-row'>";
+      echo "<input type='file' name='fileToUpload' id='fileToUpload' class='form-control0' disabled>";
+      echo "<input type='submit' value='Upload File' name='submit' class='btn btn-success btn-accept' disabled>";
+      echo "</div>";  
+      echo "</td>";
+      echo "<td><button type='button' class='btn btn-success btn-accept' onclick=\"openModal1('" . $row['appointment_ID'] . "')\" data-toggle='modal' data-target='#fileupload' disabled>View Files</button>";
+      echo "</form>";
+    }else{
+      echo "<td><button type='button' class='btn btn-success btn-accept' onclick=\"openModal('" . $row['appointment_ID'] . "', '" . $row['pID'] . "','" . $row['pname'] . "', '".$row['App_status']."','".$row['appDate']."')\" data-toggle='modal' data-target='#exampleModal'>Add Health Record</button>";
+      echo "<form action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "' method='post' enctype='multipart/form-data'>";
+      echo "<input type='hidden' name='action' value='other1'>";
+      echo "<input type='hidden' name='appointmentID' value='" . $row['appointment_ID'] . "'>"; // Add hidden input for appointment ID
+      echo "<td>";
+      echo "<div class='button-row'>";
+      echo "<input type='file' name='fileToUpload' id='fileToUpload' class='form-control'>";
+      echo "<input type='submit' value='Upload File' name='submit' class='btn btn-success btn-accept'>";
+      echo "</div>";  
+      echo "</td>";
+      echo "<td><button type='button' class='btn btn-success btn-accept' onclick=\"openModal1('" . $row['appointment_ID'] . "')\" data-toggle='modal' data-target='#fileupload'>View Files</button>";
+      echo "</form>";
+    }
+
 }
 } else {
 echo "<tr><td colspan='6'>No data available</td></tr>";
@@ -433,7 +455,7 @@ echo "<tr><td colspan='6'>No data available</td></tr>";
 </nav>
 <script>
 
-function collectData(appointmentID, docname, pname, email, appDate, Time_schedule) {
+function collectData(appointmentID, docname, pname,sname, service1, service2, service3, email, appDate, Time_schedule) {
     // Send data to PHP script via AJAX
     showLoadingOverlay();
     $.ajax({
@@ -444,6 +466,10 @@ function collectData(appointmentID, docname, pname, email, appDate, Time_schedul
             docname: docname,
             email: email,
             pname: pname,
+            sname: sname,
+            service1: service1,
+            service2: service2,
+            service3: service3,
             appDate: appDate,
             Time_schedule: Time_schedule
         },
@@ -458,7 +484,7 @@ function collectData(appointmentID, docname, pname, email, appDate, Time_schedul
         }
     });
 }
-    function collectData1(appointmentID, docname, pname, email, appDate, Time_schedule) {
+    function collectData1(appointmentID, docname, pname, sname, service1, service2, service3, email, appDate, Time_schedule) {
       // Send data to PHP script via AJAX
       showLoadingOverlay();
       $.ajax({
@@ -469,6 +495,10 @@ function collectData(appointmentID, docname, pname, email, appDate, Time_schedul
             docname: docname,
             email: email,
             pname: pname,
+            sname: sname,
+            service1: service1,
+            service2: service2,
+            service3: service3,
             appDate: appDate,
             Time_schedule: Time_schedule
         },
@@ -575,11 +605,11 @@ function collectData(appointmentID, docname, pname, email, appDate, Time_schedul
           <div class="form-group">
     <label for="bp_Modal" class="col-form-label">Blood Pressure</label>
     <div class="input-group">
-        <input type="text" class="form-control" id="systolic_BP" name="systolic_BP" placeholder="Systolic">
+        <input type="number" class="form-control" id="systolic_BP" name="systolic_BP" placeholder="Systolic" maxlength="3">
         <div class="input-group-append">
             <span class="input-group-text">/</span>
         </div>
-        <input type="text" class="form-control" id="diastolic_BP" name="diastolic_BP" placeholder="Diastolic">
+        <input type="number" class="form-control" id="diastolic_BP" name="diastolic_BP" placeholder="Diastolic" maxlength="3">
     </div>
 </div>
           <div class="form-group">

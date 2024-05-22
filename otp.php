@@ -39,8 +39,8 @@ if(isset($_SESSION['otp']) && otpSentRecently()) {
 
     // Create PHPMailer instance
     $mail = new PHPMailer();
-    $mail->SMTPDebug = 2; // Enable debugging
-    $mail->Debugoutput = 'html'; 
+    // $mail->SMTPDebug = 0;
+    // $mail->Debugoutput = 'html'; 
     // Configure PHPMailer
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';  // SMTP server
@@ -66,7 +66,7 @@ if(isset($_SESSION['otp']) && otpSentRecently()) {
         echo 'Message could not be sent.';
         echo 'Mailer Error: ' . $mail->ErrorInfo;
     } else {
-        echo 'Message has been sent';
+        // echo 'Message has been sent';
     }
 }
 

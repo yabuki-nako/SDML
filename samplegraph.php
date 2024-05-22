@@ -3,12 +3,65 @@
 require_once "config.php";
 
 // Query to get data for chart 1 (Department-wise bookings count)
-$sql1 = "        SELECT specialties.sname AS department, COUNT(*) AS bookings_count 
+$sql1 = "SELECT 
+service AS department,
+COUNT(*) AS bookings_count 
+FROM (
+SELECT 
+    appointments.docid,
+    appointments.App_status,
+    specialties.sname,
+    appointments.service1 AS service
 FROM appointments
 INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN specialties ON doctor.specialties = specialties.id 
-WHERE App_status = 'done'
-GROUP BY specialties.sname;";
+WHERE appointments.App_status = 'done'
+AND appointments.service1 IS NOT NULL
+
+UNION ALL
+
+SELECT 
+    appointments.docid,
+    appointments.App_status,
+    specialties.sname,
+    appointments.service2 AS service
+FROM appointments
+INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id 
+WHERE appointments.App_status = 'done'
+AND appointments.service2 IS NOT NULL
+
+UNION ALL
+
+SELECT 
+    appointments.docid,
+    appointments.App_status,
+    specialties.sname,
+    appointments.service3 AS service
+FROM appointments
+INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id 
+WHERE appointments.App_status = 'done'
+AND appointments.service3 IS NOT NULL
+
+UNION ALL
+
+SELECT 
+    appointments.docid,
+    appointments.App_status,
+    specialties.sname,
+    specialties.sname AS service
+FROM appointments
+INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id 
+WHERE appointments.App_status = 'done'
+AND appointments.service1 IS NULL
+AND appointments.service2 IS NULL
+AND appointments.service3 IS NULL
+AND doctor.medtech = FALSE
+) AS services
+GROUP BY department
+;";
 
 $result1 = $mysqli->query($sql1);
 
@@ -52,28 +105,144 @@ while ($row4 = $result4->fetch_assoc()) {
 }
 
 // Query to get data for chart 5 (Total appointments by department per month)
-$sql5 = "SELECT specialties.sname AS department, 
-MONTH(appointments.appDate) AS month_number, 
-COUNT(*) AS bookings_count
-FROM appointments 
+$sql5 = "SELECT 
+service AS department,
+services.month_number AS month_number, 
+COUNT(*) AS bookings_count 
+FROM (
+SELECT 
+    appointments.docid,
+    appointments.App_status,
+    specialties.sname,
+    MONTH(appointments.appDate) AS month_number,
+    appointments.service1 AS service
+FROM appointments
 INNER JOIN doctor ON appointments.docid = doctor.docid
-INNER JOIN specialties ON doctor.specialties = specialties.id WHERE App_status = 'done'
-GROUP BY specialties.sname, MONTH(appointments.appDate)";
+INNER JOIN specialties ON doctor.specialties = specialties.id 
+WHERE appointments.App_status = 'done'
+AND appointments.service1 IS NOT NULL
+
+UNION ALL
+
+SELECT 
+    appointments.docid,
+    appointments.App_status,
+    specialties.sname,
+    MONTH(appointments.appDate) AS month_number,
+    appointments.service2 AS service
+FROM appointments
+INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id 
+WHERE appointments.App_status = 'done'
+AND appointments.service2 IS NOT NULL
+
+UNION ALL
+
+SELECT 
+    appointments.docid,
+    appointments.App_status,
+    specialties.sname,
+    MONTH(appointments.appDate) AS month_number,
+    appointments.service3 AS service
+FROM appointments
+INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id 
+WHERE appointments.App_status = 'done'
+AND appointments.service3 IS NOT NULL
+
+UNION ALL
+
+SELECT 
+    appointments.docid,
+    appointments.App_status,
+    specialties.sname,
+    MONTH(appointments.appDate) AS month_number,
+    specialties.sname AS service
+FROM appointments
+INNER JOIN doctor ON appointments.docid = doctor.docid
+INNER JOIN specialties ON doctor.specialties = specialties.id 
+WHERE appointments.App_status = 'done'
+AND appointments.service1 IS NULL
+AND appointments.service2 IS NULL
+AND appointments.service3 IS NULL
+AND doctor.medtech = FALSE
+) AS services
+GROUP BY department, services.month_number;";
 
 $result5 = $mysqli->query($sql5);
-
+$currentyear = date('Y');
 $data5 = array();
 while ($row5 = $result5->fetch_assoc()) {
     $data5[] = $row5;
 }
     $sql6 = " SELECT 
-    specialties.sname AS department, 
-    MONTH(appointments.appDate) AS month_number, 
-    YEAR(appointments.appDate) AS appointment_year,
-    COUNT(*) AS bookings_count FROM  appointments
+    service AS department,
+    services.month_number AS month_number, 
+	services.year_number AS appointment_year,
+    COUNT(*) AS bookings_count 
+FROM (
+    SELECT 
+        appointments.docid,
+        appointments.App_status,
+        specialties.sname,
+		YEAR(appointments.appDate) AS year_number,
+        MONTH(appointments.appDate) AS month_number,
+        appointments.service1 AS service
+    FROM appointments
     INNER JOIN doctor ON appointments.docid = doctor.docid
-    INNER JOIN specialties ON doctor.specialties = specialties.id WHERE App_status = 'done'
-    GROUP BY specialties.sname, MONTH(appointments.appDate), YEAR(appointments.appDate)";
+    INNER JOIN specialties ON doctor.specialties = specialties.id 
+    WHERE appointments.App_status = 'done'
+    AND appointments.service1 IS NOT NULL
+    
+    UNION ALL
+    
+    SELECT 
+        appointments.docid,
+        appointments.App_status,
+        specialties.sname,
+ 		YEAR(appointments.appDate) AS year_number,       
+        MONTH(appointments.appDate) AS month_number,
+        appointments.service2 AS service
+    FROM appointments
+    INNER JOIN doctor ON appointments.docid = doctor.docid
+    INNER JOIN specialties ON doctor.specialties = specialties.id 
+    WHERE appointments.App_status = 'done'
+    AND appointments.service2 IS NOT NULL
+    
+    UNION ALL
+    
+    SELECT 
+        appointments.docid,
+        appointments.App_status,
+        specialties.sname,
+		YEAR(appointments.appDate) AS year_number,
+        MONTH(appointments.appDate) AS month_number,
+        appointments.service3 AS service
+    FROM appointments
+    INNER JOIN doctor ON appointments.docid = doctor.docid
+    INNER JOIN specialties ON doctor.specialties = specialties.id 
+    WHERE appointments.App_status = 'done'
+    AND appointments.service3 IS NOT NULL
+    
+    UNION ALL
+    
+    SELECT 
+        appointments.docid,
+        appointments.App_status,
+        specialties.sname,
+		YEAR(appointments.appDate) AS year_number,
+        MONTH(appointments.appDate) AS month_number,
+        specialties.sname AS service
+    FROM appointments
+    INNER JOIN doctor ON appointments.docid = doctor.docid
+    INNER JOIN specialties ON doctor.specialties = specialties.id 
+    WHERE appointments.App_status = 'done'
+    AND appointments.service1 IS NULL
+    AND appointments.service2 IS NULL
+    AND appointments.service3 IS NULL
+    AND doctor.medtech = FALSE
+) AS services where services.year_number = $currentyear
+GROUP BY department, services.month_number, services.year_number;";
 
 $result6 = $mysqli->query($sql6);
 
@@ -327,7 +496,7 @@ chart5.draw(dataTable5, options5);
 }
 
 // Dropdown menu for selecting the year
-var yearDropdown = document.getElementById('yearDropdown');
+var yearDropdown = document.getElementById('yearDropdown')
     var currentYear = new Date().getFullYear(); // Get the current year
     var selectHTML = '<select id="yearSelect">';
     for (var year = currentYear; year >= 2023; year--) { // Loop from current year to 2023
@@ -344,9 +513,7 @@ var yearDropdown = document.getElementById('yearDropdown');
     });
 }
 
-function updateChart(data, selectedYear) {
-    // Update chart logic...
-}
+
 </script>
 </body>
 </html>

@@ -15,12 +15,11 @@ $appTime = $appDate = $docid = $medtech = "";
 $appTime_err = $appDate_err = $docid_err = $ser_err = "";
 
 
-
+$medtech_js = json_encode($medtech);
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-  
-  var_dump($_POST);
+  // var_dump($_POST);
   
   // Validate Time
   // if(empty(trim($_POST["appTime"]))){
@@ -35,7 +34,7 @@ if (empty($_POST["appTime"])) {
   $appTime = trim($_POST["appTime"]);
 }
 
-if (trim($_POST['docid']) == '49' && trim($_POST['services1']) == "Select Service") {
+if (trim($_POST['medtech']) == '1' && trim($_POST['services1']) == "Select Service") {
   $ser_err = "Please select at least one service.";
 } else {
   $ser_err = ""; // Set $ser_err to an empty string when the condition is not met
@@ -59,13 +58,13 @@ if (empty($appTime_err) && empty($appDate_err)) {
       $param_docid = trim($_POST["docid"]);
       $param_appTime = $appTime;
       $param_appDate = $appDate;
-        
+      $param_medtech = ($_POST["medtech"]);
       // Execute the prepared statement
       if ($stmt->execute()) {
           // Store the result
           $stmt->store_result();
 
-          if ($stmt->num_rows > 0 && $param_docid != 49) {
+          if ($stmt->num_rows > 0 && $param_medtech != 1) {
               $appTime_err = "This appointment time and date are already taken.";
           }
       } else {
@@ -113,7 +112,7 @@ $medtech = $_POST['medtech'];
       }
         // Attempt to execute the prepared statement
         if($stmt->execute()){
-            echo "<script type='text/javascript'>alert('Sucessfully Booked!');</script>";
+            echo "<script type='text/javascript'>alert('Sucessfully scheduled your appointment!');</script>";
             echo "<script type='text/javascript'>location.href = 'welcomepatient.php';</script>";
         } else{
             echo "Oops! Something went wrong. Please try again later.";
@@ -124,7 +123,7 @@ $medtech = $_POST['medtech'];
     }
 }
   
-var_dump($ser_err);
+// var_dump($ser_err);
 
 }
 
@@ -135,7 +134,7 @@ var_dump($ser_err);
 
 <head>
 <link rel = "icon" href = 
-"assets/img/icon.png" 
+"assets/img/sdml.png" 
         type = "image/x-icon">
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -202,70 +201,70 @@ echo "<option value='" . (int)$docid . "'>$sname - $docname</option>";
 ?>
 </select>
 
-<input type='hidden' name='medtech' value='<?php echo $medtech[$_POST["docid"]]; ?>'>
+<input type='hidden' name='medtech' id='medtech' value=''>
             <span class="invalid-feedback"><?php echo $docid_err; ?></span>
           </div>
           <div class="form-outline mb-4" id="services" style="display:none">
-          <div class="row">
-        <div class="col-sm-4">
-          <select class="form-control form-control-lg <?php echo (!empty($ser_err)) ? 'is-invalid' : ''; ?>" name="services1" id="services1">
-            <option selected>Select Service</option>
-            <option value="Blood Chemistry">Blood Chemistry</option>
-            <option value="Enzymes">Enzymes</option>
-            <option value="Urine Test">Urine Test</option>
-            <option value="Serology">Serology</option>
-            <option value="Thyroid Function Test">Thyroid Function Test</option>
-            <option value="Tumor Markers">Tumor Markers</option>
-            <option value="Parasitology">Parasitology</option>
-            <option value="Hiv Test">HIV Test</option>
-            <option value="Hepatitis Test">Hepatitis Test</option>
-            <option value="Bacteriology">Bacteriology</option>
-            <option value="ECG">ECG (Electrocardiogram)</option>
-            <option value="Echo">2-D Echo (Plain)</option>
-          </select>
-          <span class="invalid-feedback"><?php echo $ser_err; ?></span>
-          
-        </div>
-        <div class="col-sm-4" id="services2Div" style="display: none;">
-        <select class="form-control form-control-lg" name="services2" id="services2" >
-            <option selected>Select Service</option>
-            <option value="Blood Chemistry">Blood Chemistry</option>
-            <option value="Enzymes">Enzymes</option>
-            <option value="Urine Test">Urine Test</option>
-            <option value="Serology">Serology</option>
-            <option value="Thyroid Function Test">Thyroid Function Test</option>
-            <option value="Tumor Markers">Tumor Markers</option>
-            <option value="Parasitology">Parasitology</option>
-            <option value="Hiv Test">HIV Test</option>
-            <option value="Hepatitis Test">Hepatitis Test</option>
-            <option value="Bacteriology">Bacteriology</option>
-            <option value="ECG">ECG (Electrocardiogram)</option>
-            <option value="2-D Echo">2-D Echo (Plain)</option>
-          </select>
-        </div>
-        <div class="col-sm-4" id="services3Div" style="display: none;">
-        <select class="form-control form-control-lg" name="services3" id="services3">
-            <option selected>Select Service</option>
-            <option value="Blood Chemistry">Blood Chemistry</option>
-            <option value="Enzymes">Enzymes</option>
-            <option value="Urine Test">Urine Test</option>
-            <option value="Serology">Serology</option>
-            <option value="Thyroid Function Test">Thyroid Function Test</option>
-            <option value="Tumor Markers">Tumor Markers</option>
-            <option value="Parasitology">Parasitology</option>
-            <option value="Hiv Test">HIV Test</option>
-            <option value="Hepatitis Test">Hepatitis Test</option>
-            <option value="Bacteriology">Bacteriology</option>
-            <option value="ECG">ECG (Electrocardiogram)</option>
-            <option value="2-D Echo">2-D Echo (Plain)</option>
-          </select>
-          
-        </div>
-    </div>
-    <div class="col-sm-4 mt-4" id="addbutton">
-        <button type ="button" class="btn btn-success" onclick="showNextSelect()" disabled>Add another service</button>
-    </div>
-
+            <div class="row">
+              <div class="col-sm-4" id="services1Div">
+                <select class="form-control form-control-lg <?php echo (!empty($ser_err)) ? 'is-invalid' : ''; ?>" name="services1" id="services1">
+                  <option selected>Select Service</option>
+                  <option value="Blood Chemistry">Blood Chemistry</option>
+                  <option value="Enzymes">Enzymes</option>
+                  <option value="Urine Test">Urine Test</option>
+                  <option value="Serology">Serology</option>
+                  <option value="Thyroid Function Test">Thyroid Function Test</option>
+                  <option value="Tumor Markers">Tumor Markers</option>
+                  <option value="Parasitology">Parasitology</option>
+                  <option value="Hiv Test">HIV Test</option>
+                  <option value="Hepatitis Test">Hepatitis Test</option>
+                  <option value="Bacteriology">Bacteriology</option>
+                  <option value="ECG">ECG (Electrocardiogram)</option>
+                  <option value="Echo">2-D Echo (Plain)</option>
+                </select>
+                <span class="invalid-feedback"><?php echo $ser_err; ?></span>
+                <div class ="mt-2"id="addbutton">
+              <button type="button" class="btn btn-success" onclick="showNextSelect()" disabled>Add another service</button>
+            </div>
+              </div>
+              <div class="col-sm-4" id="services2Div" style="display: none;">
+                <select class="form-control form-control-lg" name="services2" id="services2">
+                  <option selected>Select Service</option>
+                  <option value="Blood Chemistry">Blood Chemistry</option>
+                  <option value="Enzymes">Enzymes</option>
+                  <option value="Urine Test">Urine Test</option>
+                  <option value="Serology">Serology</option>
+                  <option value="Thyroid Function Test">Thyroid Function Test</option>
+                  <option value="Tumor Markers">Tumor Markers</option>
+                  <option value="Parasitology">Parasitology</option>
+                  <option value="Hiv Test">HIV Test</option>
+                  <option value="Hepatitis Test">Hepatitis Test</option>
+                  <option value="Bacteriology">Bacteriology</option>
+                  <option value="ECG">ECG (Electrocardiogram)</option>
+                  <option value="2-D Echo">2-D Echo (Plain)</option>
+                </select>
+                <button type="button" class="btn btn-danger mt-2" onclick="removeService('services2Div')">Delete</button>
+              </div>
+              <div class="col-sm-4" id="services3Div" style="display: none;">
+                <select class="form-control form-control-lg" name="services3" id="services3">
+                  <option selected>Select Service</option>
+                  <option value="Blood Chemistry">Blood Chemistry</option>
+                  <option value="Enzymes">Enzymes</option>
+                  <option value="Urine Test">Urine Test</option>
+                  <option value="Serology">Serology</option>
+                  <option value="Thyroid Function Test">Thyroid Function Test</option>
+                  <option value="Tumor Markers">Tumor Markers</option>
+                  <option value="Parasitology">Parasitology</option>
+                  <option value="Hiv Test">HIV Test</option>
+                  <option value="Hepatitis Test">Hepatitis Test</option>
+                  <option value="Bacteriology">Bacteriology</option>
+                  <option value="ECG">ECG (Electrocardiogram)</option>
+                  <option value="2-D Echo">2-D Echo (Plain)</option>
+                </select>
+                <button type="button" class="btn btn-danger mt-2" onclick="removeService('services3Div')">Delete</button>
+              </div>
+            </div>
+ 
           </div>
           
           <div class="form-outline mb-4">
@@ -297,6 +296,7 @@ echo "<option value='" . (int)$docid . "'>$sname - $docname</option>";
           
           </div>
           <div class="pt-1 mt-5">
+            
             <input type="submit" class="btn btn-dark btn-lg" value="Submit"><br><br>
             <p class="mb-0 pb-lg-2" style="color: #393f81;"><a href="Loginemp.php"></a></p>
           </div>
@@ -339,18 +339,61 @@ echo "<option value='" . (int)$docid . "'>$sname - $docname</option>";
 <script src="assets/vendor/aos/aos.js"></script>
 
 <script>
+  
+          function removeService(serviceId) {
+            document.getElementById(serviceId).style.display = 'none';
+            checkEnableAddButton();
+            checkEnableRemoveButtons();
+          }
+
+          function checkEnableAddButton() {
+            var services1 = document.getElementById('services1Div').style.display !== 'none';
+            var services2 = document.getElementById('services2Div').style.display !== 'none';
+            var services3 = document.getElementById('services3Div').style.display !== 'none';
+            document.getElementById('addbutton').firstElementChild.disabled = services1 && services2 && services3;
+          }
+
+          function checkEnableRemoveButtons() {
+            var visibleServiceCount = 0;
+            var serviceDivs = ['services1Div', 'services2Div', 'services3Div'];
+
+            serviceDivs.forEach(function(serviceId) {
+              if (document.getElementById(serviceId).style.display !== 'none') {
+                visibleServiceCount++;
+              }
+            });
+
+            serviceDivs.forEach(function(serviceId) {
+              var removeButton = document.querySelector('#' + serviceId + ' .remove-btn');
+              if (visibleServiceCount <= 1) {
+                removeButton.disabled = true;
+              } else {
+                removeButton.disabled = false;
+              }
+            });
+          }
+
+
+
+
+//asdasd//
+var medtechValues = <?php echo $medtech_js; ?>;
 document.getElementById('docid').addEventListener('change', function() {
-    var servicesDiv = document.getElementById('services');
-    var selectedDocId = this.value;
-    var medtechValue = <?php echo json_encode($medtech); ?>; // Assuming $medtech contains the medtech values associated with each doctor
-    
-    // Check if the selectedDocId is in the medtech array and if its corresponding value is 1 (true)
-    if (medtechValue[selectedDocId] == 1) {
-        servicesDiv.style.display = 'block';
-    } else {
-        servicesDiv.style.display = 'none';
-    }
-});
+        var selectedDocId = this.value;
+        var medtechValue = <?php echo json_encode($medtech); ?>;
+
+        // Set the hidden medtech field value based on the selected doctor
+        document.getElementById('medtech').value = medtechValue[selectedDocId];
+
+        // Show or hide the services div based on the medtech value
+        var servicesDiv = document.getElementById('services');
+        if (medtechValue[selectedDocId] == 1) {
+            servicesDiv.style.display = 'block';
+        } else {
+            servicesDiv.style.display = 'none';
+        }
+    });
+
 
 
 $(document).ready(function(){
@@ -400,7 +443,7 @@ function showNextSelect() {
         addButton.disabled = true; // Disable button until next selection
     } else if (services3Div.style.display === 'none') {
         services3Div.style.display = 'block';
-        addButton.style.display = 'none'; // Hide button after the third select
+        addButton.disabled = true; // Hide button after the third select
     }
 }
   </script>

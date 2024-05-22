@@ -28,11 +28,12 @@ $rowCount = mysqli_num_rows($result)
 
 <head>
 <link rel = "icon" href = 
-"assets/img/icon.png" 
+"assets/img/sdml.png" 
         type = "image/x-icon">
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
+  <title>St. Dominic Medical Laboratory</title>
   <title>Makiling Clinic</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
@@ -89,7 +90,10 @@ $rowCount = mysqli_num_rows($result)
             <th>Appointment ID </th>
             <th>Doctor name</th>
             <th>Department</th>
-            <th>Patient Name</th>
+            <th>Department</th>
+            <th>Services availed<br>
+              (Diagnostic Test)
+            </th>
             <th>Patient ID</th>
             <th>Date</th>
             <th>Time </th>
@@ -116,7 +120,7 @@ $totalPages = ceil($totalRows / $limit);
 
 // Loop through the result set and generate table rows
 $sql1 = "	SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
-appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
+appointments.appDate,appointments.service1,appointments.service2, appointments.service3, appointments.appTime, docsched.time_schedule, appointments.App_status FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail 
 ON appointments.pId = patient_detail.pId INNER JOIN docsched ON appointments.appTime = docsched.appTime ORDER BY appointments.appointment_ID desc 
 LIMIT $limit OFFSET $offset";
@@ -130,7 +134,8 @@ if ($result1->num_rows > 0) {
         echo "<td>" . $row['appointment_ID'] . "</td>";
         echo "<td>" . $row['docname'] . "</td>";
         echo "<td>" . $row['sname'] . "</td>";
-        echo "<td>" . $row['pname'] . "</td>";
+        echo "<td>" . $row['sname'] . "</td>";
+        echo "<td>" . $row['service1'] . "<br>" . $row['service2'] . "<br>" . $row['service3'] . "</td>";
         echo "<td>" . $row['pId'] . "</td>";
         echo "<td>" . $row['appDate'] . "</td>";
         echo "<td>" . $row['time_schedule'] . "</td>";
