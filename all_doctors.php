@@ -23,12 +23,12 @@ $rowCount = mysqli_num_rows($result)
 
 <head>
 <link rel = "icon" href = 
-"assets/img/icon.png" 
+"assets/img/sdml.png" 
         type = "image/x-icon">
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Makiling Clinic</title>
+  <title>St. Dominic Medical Laboratory</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -71,7 +71,7 @@ $rowCount = mysqli_num_rows($result)
         <div class="card" style="border-radius: 1rem; background-color: white;">
         <div class="card-body p-4 p-lg-12">
         <h3>List of All doctors</h3>
-        <h4>Total Appointment - <?php echo $rowCount;?></h4>
+        <h4><strong>Total Doctors - <?php echo $rowCount;?></h4></strong>
           <hr class="app"></hr>
           <div class="table-responsive">
           <table class="table table-striped table-default ">

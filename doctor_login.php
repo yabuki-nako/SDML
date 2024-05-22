@@ -19,7 +19,7 @@ $email_err = $password_err = $login_err = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if email is empty
     if (empty(trim($_POST["email"]))) {
-        $email_err = "Please enter email.";
+        $email_err = "Please enter Email Address.";
     } else {
         $email = trim($_POST["email"]);
     }
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Validate the email format
         // if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             // Prepare a select statement
-            $sql = "SELECT doctor.docid, doctor.docemail,doctor.docpassword,doctor.docname, doctor.doctel, specialties.sname
+            $sql = "SELECT doctor.docid, doctor.docemail,doctor.docpassword,doctor.docname, doctor.doctel, specialties.sname , doctor.medtech
             FROM doctor
             JOIN specialties ON doctor.specialties = specialties.id WHERE docemail = ?";
 
@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Check if email exists, if yes then verify password
                     if ($stmt->num_rows == 1) {
                         // Bind result variables
-                        $stmt->bind_result($docid, $docemail, $docpassword,  $docname,$doctel, $sname);
+                        $stmt->bind_result($docid, $docemail, $docpassword,  $docname,$doctel, $sname, $medtech);
                         if ($stmt->fetch()) {
                             if ($docpassword) {
                                 // Password is correct, so start a new session
@@ -66,21 +66,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 $_SESSION["docid"] = $docid;
                                 $_SESSION["docname"] = $docname;
                                 $_SESSION["docemail"] = $docemail;
-
+                                $_SESSION["medtech"] = $medtech;
                                 $_SESSION["doctel"] = $doctel;
-
                                 $_SESSION["sname"] = $sname;  
                                 // Redirect user to welcome page
                                 header("location: Doctor_Appointment_List.php");
                                 exit;
                             } else {
                                 // Password is not valid, display a generic error message
-                                $login_err = "Invalid emaild or password.";
+                                $login_err = "Invalid Email Address or Password.";
                             }
                         }
                     } else {
                         // Email doesn't exist, display a generic error message
-                        $login_err = "Invalid emaidsl or password.";
+                        $login_err = "Invalid Email address or password.";
                     }
                 } else {
                     echo "Oops! Something went wrong. Please try again later.";
@@ -90,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->close();
             }
         } else {
-            $login_err = "Invalid email format.";
+            $login_err = " Data doesn't exist";
         }
     }
 

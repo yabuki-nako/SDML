@@ -77,28 +77,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       $specialties_err = "Please select department.";     
   } else{
       $specialties = trim($_POST["specialties"]);
+      if (!is_array($specialties)) {
+        // If it's not an array, convert it to an array
+        $selected_specialties = array($specialties);
   }
-
+  $medtech = 0;
+  if (in_array(1, $selected_specialties)) { // Assuming specialty 1 requires medtech, change as needed
+      $medtech = 1;
+  }
+}
     // Check input errors before inserting in database
     if(empty($docemail_err) && empty($docpassword_err) && empty($docname_err) && empty($doctel_err) && empty($specialties_err)){
         $specialties = intval($specialties);
         // Prepare an insert statement
-        $sql = "INSERT INTO doctor (docname, docemail, docpassword, doctel,specialties) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO doctor (docname, docemail, docpassword, doctel,specialties, medtech) VALUES (?, ?, ?, ?, ?, ?)";
          
         if($stmt = $mysqli->prepare($sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("sssss",$param_docname, $param_docemail, $param_docpassword, $param_doctel, $param_specialties);
+            $stmt->bind_param("sssssi",$param_docname, $param_docemail, $param_docpassword, $param_doctel, $param_specialties, $param_medtech);
             
             // Set parameters
             $param_docname = $docname;
             $param_docemail = $docemail;
             $param_doctel = $doctel;
             $param_specialties = $specialties;
+            $param_medtech = $medtech;
             $param_docpassword = password_hash($docpassword, PASSWORD_DEFAULT); // Creates a password hash
+            
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
-            
+              echo  '<script>alert("Added Successfully!")</script>';
                 header("location: add_doctors.php");
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
@@ -125,12 +134,12 @@ $result = $mysqli->query($sql);
 
 <head>
 <link rel = "icon" href = 
-"assets/img/icon.png" 
+"assets/img/sdml.png" 
         type = "image/x-icon">
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Makiling Clinic</title>
+  <title>St. Dominic Medical Laboratory</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -204,6 +213,7 @@ while ($row = $result->fetch_assoc()) {
   } 
             ?>
           </select>
+
           <span class="invalid-feedback"><?php echo $specialties_err; ?></span>
 
                   </div>

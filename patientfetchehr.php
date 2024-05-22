@@ -16,13 +16,13 @@ if ($result->num_rows > 0) {
     echo "<tr>";
     echo "<th>Record ID</th>";
     // echo "<th>Patient ID</th>";
-    echo "<th>Height</th>";
-    echo "<th>Weight</th>";
+    echo "<th>Height (cm)</th>";
+    echo "<th>Weight (kg)</th>";
     echo "<th>BMI</th>";
-    echo "<th>Blood type</th>";
+    echo "<th>Blood Type</th>";
     echo "<th>Blood Pressure</th>";
-    echo "<th>Respiratory Rate</th>";
-    echo "<th>Temperature</th>";
+    echo "<th>Respiratory Rate (per minute)</th>";
+    echo "<th>Temperature (celsius)</th>";
     echo "<th>Drug Name</th>";
     echo "<th>Prescribed Date</th>";
     echo "<th>Note</th>";

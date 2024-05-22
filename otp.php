@@ -20,7 +20,7 @@ use PHPMailer\PHPMailer\Exception;
 // Function to check if OTP has been sent within last 1 minutes
 function otpSentRecently() {
     if(isset($_SESSION['otp_time'])) {
-        return (time() - $_SESSION['otp_time']) <= (15 * 60);
+        return (time() - $_SESSION['otp_time']) <= (2 * 60);
     }
     return false;
 }
@@ -39,8 +39,8 @@ if(isset($_SESSION['otp']) && otpSentRecently()) {
 
     // Create PHPMailer instance
     $mail = new PHPMailer();
-    $mail->SMTPDebug = 2; // Enable debugging
-    $mail->Debugoutput = 'html'; 
+    // $mail->SMTPDebug = 0;
+    // $mail->Debugoutput = 'html'; 
     // Configure PHPMailer
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';  // SMTP server
@@ -66,7 +66,7 @@ if(isset($_SESSION['otp']) && otpSentRecently()) {
         echo 'Message could not be sent.';
         echo 'Mailer Error: ' . $mail->ErrorInfo;
     } else {
-        echo 'Message has been sent';
+        // echo 'Message has been sent';
     }
 }
 
@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
   if (isset($_SESSION['otp']) && isset($_POST['otp']) && $_POST['otp'] == $_SESSION['otp']) {
       // Check if OTP is expired
-      if (isset($_SESSION['otp_time']) && ($current_time - $_SESSION['otp_time']) <= (15 * 60)) { // 1 minutes * 60 seconds
+      if (isset($_SESSION['otp_time']) && ($current_time - $_SESSION['otp_time']) <= (2 * 60)) { // 1 minutes * 60 seconds
           // OTP is valid, set a flag indicating it's correct
           $_SESSION["loggedin"] = true;
 
@@ -103,10 +103,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 
 <head>
+<link rel = "icon" href = 
+"assets/img/sdml.png" 
+        type = "image/x-icon">
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Makiling Clinic</title>
+  <title>St. Dominic Medical Laboratory</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -202,7 +205,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </form>
 <?php
 function formatRemainingTime($otp_time) {
-    $remaining_time = ($otp_time + (15 * 60)) - time();
+    $remaining_time = ($otp_time + (2 * 60)) - time();
     $minutes = floor($remaining_time / 60);
     $seconds = $remaining_time % 60;
     return '(' . $minutes . 'm ' . $seconds . 's)';
@@ -236,8 +239,8 @@ function formatRemainingTime($otp_time) {
 
 <script>
     // Check if the OTP is expired
-    var otpExpired = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time']) && (time() - $_SESSION['otp_time']) > (15 * 60)) ? 'true' : 'false'; ?>;
-    var remainingTime = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time'])) ? ($_SESSION['otp_time'] + (15 * 60)) - time() : 0; ?>;
+    var otpExpired = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time']) && (time() - $_SESSION['otp_time']) > (2 * 60)) ? 'true' : 'false'; ?>;
+    var remainingTime = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time'])) ? ($_SESSION['otp_time'] + (2 * 60)) - time() : 0; ?>;
     
     // Disable the resend OTP button if OTP is not expired
     if (!otpExpired) {
@@ -258,7 +261,7 @@ function formatRemainingTime($otp_time) {
     setTimeout(enableResendButton, remainingTime * 1000); // Convert remaining time to milliseconds
 
     function startTimer() {
-    var remainingTime = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time'])) ? ($_SESSION['otp_time'] + (15 * 59)) - time() : 0; ?>;
+    var remainingTime = <?php echo (isset($_SESSION['otp']) && isset($_SESSION['otp_time'])) ? ($_SESSION['otp_time'] + (2 * 59)) - time() : 0; ?>;
     var timerElement = document.getElementById("timer");
     var interval = setInterval(function() {
         var minutes = Math.floor(remainingTime / 59);

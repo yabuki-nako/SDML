@@ -200,7 +200,7 @@ if ($result1->num_rows > 0) {
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="fileupload">List of uploaded documents:</h5>
+        <h5 class="modal-title" id="fileupload">List of uploaded document/s:</h5>
       </div>
       <div class="modal-body">
       </div>

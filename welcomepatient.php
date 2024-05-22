@@ -111,8 +111,8 @@ $result = $mysqli->query($sql);
 $pId = $_SESSION['id'];
 $pending = "Pending";
 $accepted = "accepted";
-$sql3 = "SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
-appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status
+$sql3 = "SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,doctor.medtech,
+appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status, appointments.service1, appointments.service2, appointments.service3
 FROM appointments
 INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN specialties ON doctor.specialties = specialties.id
@@ -126,7 +126,7 @@ if ($result3->num_rows > 0) {
     echo    ' <div class="infocontainer">';
     echo '<div class="time">'.date("F j, Y", strtotime($row['appDate']))."</div>";
     echo '<div class="time1">'.$row['time_schedule']."</div>";
-    echo '                    <div class="row mt-3">
+    echo '<div class="row mt-3">
     <div class="col">
     <h5>Doctor Name: </h5>
     <h4>'.$row["docname"].'</h4>
@@ -135,17 +135,31 @@ if ($result3->num_rows > 0) {
     <h5>Appointment ID:</h5>
     <h4>'.$row["appointment_ID"].'</h4>
     </div>
-  </div> 
-  <div class="row">
-  <div class="col">
-  <h5>Department: </h5>
-  <h4>'.$row["sname"].'</h4> 
+    </div> 
+    <div class="row">
+    <div class="col">
+    <h5>Department: </h5>
+    <h4>'.$row["sname"].'</h4> 
+    </div>
+    <div class="col">
+    <h5>Status:</h5>
+    <h4>'.$row["App_status"].'</h4> 
+    </div>
+    <div class="row">
+    <div class="col">' ;
+    if ($row['medtech'] == 1):
+      echo '<h5>Service/s Availed: </h5>';
+      echo '<h4>'.$row['service1'];
+      if (!empty($row['service2'])) {
+          echo ', <br>'.$row['service2'];
+      }
+      if (!empty($row['service3'])) {
+          echo ',<br> '.$row['service3'];
+      }
+      echo '</h4>';
+  endif;
 
-  </div>
-  <div class="col">
-  <h5>Status:</h5>
-  <h4>'.$row["App_status"].'</h4> 
-  </div> </div> </div>';
+    echo '</div></div></div> </div>';
 
   }
 } else {
