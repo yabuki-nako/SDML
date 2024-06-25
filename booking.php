@@ -10,14 +10,13 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     exit;
 }
 
-// Define variables and initialize with empty values
+
 $appTime = $appDate = $docid = $medtech = "";
 $appTime_err = $appDate_err = $docid_err = $ser_err = "";
 
 
 $medtech_js = json_encode($medtech);
 
-// Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
   // var_dump($_POST);
   
@@ -91,27 +90,26 @@ $medtech = $_POST['medtech'];
     $sql2 = "INSERT INTO appointments (docid, pId, appDate, appTime, service1, service2, service3, App_status) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')";
        
     if($stmt = $mysqli->prepare($sql2)){
-        // Bind variables to the prepared statement as parameters
         $stmt->bind_param("sssssss", $param_docid, $param_pid, $param_appDate, $param_appTime, $param_service1, $param_service2, $param_service3);
           
         // Set parameters
         $param_pid = $_SESSION['id'];
         $param_docid = $docid;
         $param_appDate = $appDate;
-        $param_appTime = $appTime; // Store the time range directly
+        $param_appTime = $appTime; 
         $param_medtech = $medtech;
         if ($medtech == 1) {
-          // Set default value to 0 if "Select Service" is chosen
+
           $param_service1 = ($_POST['services1'] != "Select Service") ? $_POST['services1'] : null;
           $param_service2 = ($_POST['services2'] != "Select Service") ? $_POST['services2'] : null;
           $param_service3 = ($_POST['services3'] != "Select Service") ? $_POST['services3'] : null;
       } else {
-          // For other cases, set services to 0
+
           $param_service1 = null;
           $param_service2 = null;
           $param_service3 = null;
       }
-        // Attempt to execute the prepared statement
+
         if($stmt->execute()){
             echo "<script type='text/javascript'>alert('Sucessfully scheduled your appointment!');</script>";
             echo "<script type='text/javascript'>location.href = 'welcomepatient.php';</script>";
@@ -275,23 +273,21 @@ echo "<option value='" . (int)$docid . "'>$sname - $docname</option>";
             <span class="invalid-feedback"><?php echo $appDate_err; ?></span>
           </div>
           <div class="form-outline mb-4">
-          <!-- <label class="form-label" for="form2Example27">Appointment Time</label>
-          <input type="time" id="appTime" name="appTime"  min="09:00" max="18:00" class="form-control form-control-lg"required>
-          </div> -->
+
           <div class="form-outline mb-">
             <label class="form-label" for="appTime">Select Time</label>
             <select name="appTime" id="appTime" class="form-control form-control-lg <?php echo (!empty($appTime_err)) ? 'is-invalid' : ''; ?>">
-    <option disabled selected>Select Time</option>
-    <option value="1">8:00AM - 9:00AM</option>
-    <option value="2">9:00AM - 10:00AM</option>
-    <option value="3">10:00AM - 11:00AM</option>
-    <option value="4">11:00AM - 12:00PM</option>
-    <option value="5">1:00PM - 2:00PM</option>
-    <option value="6">2:00PM - 3:00PM</option>
-    <option value="7">3:00PM - 4:00PM</option>
-    <option value="8">4:00PM - 5:00PM</option>
-    <option value="9">5:00PM - 6:00PM</option>
-</select>      
+              <option disabled selected>Select Time</option>
+              <option value="1">8:00AM - 9:00AM</option>
+              <option value="2">9:00AM - 10:00AM</option>
+              <option value="3">10:00AM - 11:00AM</option>
+              <option value="4">11:00AM - 12:00PM</option>
+              <option value="5">1:00PM - 2:00PM</option>
+              <option value="6">2:00PM - 3:00PM</option>
+              <option value="7">3:00PM - 4:00PM</option>
+              <option value="8">4:00PM - 5:00PM</option>
+              <option value="9">5:00PM - 6:00PM</option>
+            </select>      
           <span class="invalid-feedback"><?php echo $appTime_err; ?></span>  
                    
           
@@ -383,7 +379,7 @@ document.getElementById('docid').addEventListener('change', function() {
         var selectedDocId = this.value;
         var medtechValue = <?php echo json_encode($medtech); ?>;
 
-        // Set the hidden medtech field value based on the selected doctor
+
         document.getElementById('medtech').value = medtechValue[selectedDocId];
 
         // Show or hide the services div based on the medtech value

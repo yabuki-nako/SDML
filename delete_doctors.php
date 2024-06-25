@@ -4,7 +4,6 @@ session_start();
 require_once "config.php";
 // time and date
 $today = date("F j, Y ");
-// Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["adminloggedin"]) || $_SESSION["adminloggedin"] !== true){
   header("location: admin_login.php");
   exit;
@@ -13,10 +12,8 @@ $action = isset($_POST['action']) ? $_POST['action'] : null;
 switch ($action) {
   case 'disable':
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      // Validate and sanitize the selected docid
       if (isset($_POST["specialty"])) {
           $selectedDocid = $_POST["specialty"];
-          // Perform further validation if needed
           $selectedDocid = intval($selectedDocid);
     
           // Check if the doctor has pending appointments
@@ -58,13 +55,10 @@ switch ($action) {
 
   case 'activate1':
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-          // Validate and sanitize the selected docid
           if (isset($_POST["activatedoc"])) {
             $selectedDocid = $_POST["activatedoc"];
-            // Perform further validation if needed
             $selectedDocid = intval($selectedDocid);
       
-            // Delete the row based on the selected docid
             $sql = "UPDATE doctor SET delete_status = 0 WHERE docid = ?";
             $stmt = $mysqli->prepare($sql);
             $stmt->bind_param("i", $selectedDocid);
@@ -76,7 +70,6 @@ switch ($action) {
                     $delete_err = "Doctor Account not re-activated";
                 }
             } catch (Exception $e) {
-                // Handle the exception and display an error message
                 $delete_err = "Encounter error";
             }
         } else {
@@ -87,10 +80,8 @@ switch ($action) {
       break;
 
   default:
-      //action not found
       break;
 }
-// Check if the form is submitted
 
 ?>
 

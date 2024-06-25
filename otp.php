@@ -1,15 +1,14 @@
 <?php
 
-// Start session if not already started
 session_start();
 
 
 
 $alert = "Invalid OTP";
 $otpsent = "OTP has already been sent. Please check your email or wait before requesting a new one.";
-$current_time = time(); // Get current timestamp
+$current_time = time(); 
 
-// Include PHPMailer
+
 require_once "assets/PHPMailer/src/PHPMailer.php";
 require_once "assets/PHPMailer/src/SMTP.php";
 require_once "assets/PHPMailer/src/Exception.php";
@@ -17,7 +16,7 @@ require_once "assets/PHPMailer/src/Exception.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Function to check if OTP has been sent within last 1 minutes
+
 function otpSentRecently() {
     if(isset($_SESSION['otp_time'])) {
         return (time() - $_SESSION['otp_time']) <= (2 * 60);
@@ -85,9 +84,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           // OTP is valid, set a flag indicating it's correct
           $_SESSION["loggedin"] = true;
 
-          // Redirect to welcomepatient.php after successful OTP verification
+
           header("location: welcomepatient.php");
-          exit; // Don't forget to exit after redirecting
+          exit; 
       } else {
           // OTP is expired
           echo "<script type='text/javascript'>alert('OTP has expired. Please request a new one.');</script>";
@@ -117,32 +116,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 "assets/img/icon.png" 
         type = "image/x-icon">
 
-  <!-- Google Fonts -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
 
-  <!-- Template Main CSS File -->
+
   <link href="assets/css/main.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: Impact
-  * Updated: May 30 2023 with Bootstrap v5.3.0
-  * Template URL: https://bootstrapmade.com/impact-bootstrap-business-website-template/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
 
-  <!-- ======= Header ======= -->
 
 
   <header id="header" class="header d-flex align-items-center">

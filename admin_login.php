@@ -1,5 +1,4 @@
 <?php
-// Initialize the session
 session_start();
 // admin login details
 // Email: cyrix123@gmail.com 
@@ -13,11 +12,9 @@ session_start();
 // Include config file
 require_once "config.php";
 
-// Define variables and initialize with empty values
 $email = $password = "";
 $email_err = $password_err = $login_err = "";
  
-// Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Check if email is empty
@@ -36,17 +33,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
     // Validate credentials
     if(empty($email_err) && empty($password_err)){
-        // Prepare a select statement
+    
         $sql = "SELECT admin_id, email, password FROM admin_account WHERE email = ?";
         
         if($stmt = $mysqli->prepare($sql)){
-            // Bind variables to the prepared statement as parameters
             $stmt->bind_param("s", $param_email);
             
             // Set parameters
             $param_email = $email;
-            
-            // Attempt to execute the prepared statement
             if($stmt->execute()){
                 // Store result
                 $stmt->store_result();
@@ -65,15 +59,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION["id"] = $id;
                             $_SESSION["email"] = $email;                            
                             
-                            // Redirect user to welcome page
                             header("location: all_history.php");
                         } else{
-                            // Password is not valid, display a generic error message
+                            
                             $login_err = "Incorrect password for admin";
                         }
                     }
                 } else{
-                    // email doesn't exist, display a generic error message
+
                     $login_err = "Incorrect email for admin";
                 }
             } else{
@@ -140,8 +133,6 @@ $activePage = basename($_SERVER['PHP_SELF']);
 <header id="header mb-5" class="header d-flex align-items-center">
 
 <div class="container-fluid container-xl d-flex align-items-center justify-content-between ">
-    <!-- Uncomment the line below if you also wish to use an image logo -->
-    <!-- <img src="assets/img/logo.png" alt=""> -->
     <img src ="assets/img/logoName.png" width="250" height="60" >
   <nav id="navbar" class="navbar">
     <ul>  
@@ -161,10 +152,6 @@ $activePage = basename($_SERVER['PHP_SELF']);
       <div class="card" style="border-radius: 1rem; background-color: rgba(255, 255, 255, 0.8);">
 
           <div class="row gx-5">
-          <!-- <div class="col-md-6 col-lg-5 d-none d-md-block">
-                        <img src="assets/img/logmain.png"
-                          alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
-                      </div> -->
           <div class="col-md-10 col-lg-10 d-flex align-items-center">
                 
               <div class="card-body p-4 p-lg-5 text-black">

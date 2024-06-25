@@ -104,7 +104,6 @@ switch ($action) {
       $prescribed_date = date("Y-m-d");
       $note = $_POST['note_Modal'];
       
-      // Assuming $mysqli is your database connection
       
       // Get pId from patient_idModal
       $pId_query = "SELECT pID FROM patient_detail WHERE pID = '$pID'";
@@ -114,8 +113,6 @@ switch ($action) {
           $row = $result_pId->fetch_assoc();
           $pId = $row["pID"];
       } else {
-          // Handle the case where the patient ID doesn't exist in the database
-          // You might want to insert the patient details first
       }
       
       // Prepare and execute the SQL statement
@@ -138,8 +135,6 @@ switch ($action) {
 }
 
 //
-
-// Assuming $mysqli is your database connection
 
 // Check if the form was submitted
 
@@ -197,16 +192,14 @@ switch ($action) {
   <meta content="" name="keywords">
 
  
-  <!-- Google Fonts -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
-  <!-- Template Main CSS File -->
+
   <link href="assets/css/patient.css" rel="stylesheet">
   <link href="assets/css/header.css" rel="stylesheet">
 
@@ -305,7 +298,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 }
 
-// Loop through the result set and generate table rows
+
 $sql1 = "SELECT appointments.appointment_ID, patient_detail.pname, patient_detail.pID, patient_detail.email,
 appointments.appDate, docsched.Time_schedule, appointments.App_status 
 FROM appointments 

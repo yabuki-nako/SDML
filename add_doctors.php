@@ -1,17 +1,17 @@
 <?php
-// Initialize the session
+
 session_start();
 require_once "config.php";
 // time and date
 $today = date("F j, Y ");
-// Check if the user is logged in, if not then redirect him to login page
+
 if(!isset($_SESSION["adminloggedin"]) || $_SESSION["adminloggedin"] !== true){
   header("location: admin_login.php");
   exit;
 }
 $docemail = $docpassword  = $docname = $doctel = $specialties= "";
 $docemail_err = $docpassword_err = $docname_err = $doctel_err = $specialties_err ="";
-// Processing form data when form is submitted
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Validate email
@@ -20,17 +20,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     } elseif(!preg_match('/^[a-zA-Z0-9_@.]+$/', trim($_POST["docemail"]))){
         $docemail_err = "email can only contain letters, numbers, and underscores.";
     } else{
-        // Prepare a select statement
+
         $sql = "SELECT docid FROM doctor WHERE docemail = ?";
         
         if($stmt = $mysqli->prepare($sql)){
-            // Bind variables to the prepared statement as parameters
-            $stmt->bind_param("s", $param_email);
-            
-            // Set parameters
-            $param_email = trim($_POST["docemail"]);
-            
-            // Attempt to execute the prepared statement
+
+            $stmt->bind_param("s", $param_email);           
+            $param_email = trim($_POST["docemail"]);          
+
             if($stmt->execute()){
                 // store result
                 $stmt->store_result();
@@ -43,8 +40,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
             }
-
-            // Close statement
             $stmt->close();
         }
     }
@@ -82,18 +77,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $selected_specialties = array($specialties);
   }
   $medtech = 0;
-  if (in_array(1, $selected_specialties)) { // Assuming specialty 1 requires medtech, change as needed
+  if (in_array(1, $selected_specialties)) { 
       $medtech = 1;
   }
 }
-    // Check input errors before inserting in database
     if(empty($docemail_err) && empty($docpassword_err) && empty($docname_err) && empty($doctel_err) && empty($specialties_err)){
         $specialties = intval($specialties);
-        // Prepare an insert statement
         $sql = "INSERT INTO doctor ( docname, docemail, docpassword, doctel,specialties, medtech) VALUES (?, ?, ?, ?, ?, ?)";
          
         if($stmt = $mysqli->prepare($sql)){
-            // Bind variables to the prepared statement as parameters
             $stmt->bind_param("sssssi",$param_docname, $param_docemail, $param_docpassword, $param_doctel, $param_specialties, $param_medtech);
             
             // Set parameters
@@ -102,10 +94,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_doctel = $doctel;
             $param_specialties = $specialties;
             $param_medtech = $medtech;
-            $param_docpassword = password_hash($docpassword, PASSWORD_DEFAULT); // Creates a password hash
+            $param_docpassword = password_hash($docpassword, PASSWORD_DEFAULT); 
             
             
-            // Attempt to execute the prepared statement
             if($stmt->execute()){
               echo "<script type='text/javascript'>alert('Sucessfully added a doctor account');</script>";
               echo "<script type='text/javascript'>location.href = 'add_doctors.php';</script>";
@@ -113,7 +104,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 echo "Oops! Something went wrong. Please try again later.";
             }
 
-            // Close statement
             $stmt->close();
         }
     }

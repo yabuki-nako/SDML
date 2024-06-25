@@ -40,14 +40,10 @@ $rowCount = mysqli_num_rows($result)
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
   <link href="assets/css/patient.css" rel="stylesheet">
   <link href="assets/css/header.css" rel="stylesheet">
-  <!-- <link href="assets/css/patientmain.css" rel="stylesheet"> -->
  
   
   <!-- TIMER FUNCTION -->
@@ -110,7 +106,6 @@ $totalRows = $totalRow['count'];
 $totalPages = ceil($totalRows / $limit); 
 
 // Calculate total pages
-// Loop through the result set and generate table rows
 $sql1 = "	SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
 appointments.appDate, appointments.appTime, docsched.time_schedule, appointments.App_status FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail ON appointments.pId = patient_detail.pId INNER JOIN docsched ON appointments.appTime = docsched.appTime
@@ -126,7 +121,6 @@ if ($result1->num_rows > 0) {
         echo "<td>" . $row['sname'] . "</td>";
         echo "<td>" . $row['appDate'] . "</td>";
         echo "<td>" . $row['time_schedule'] . "</td>";
-        // echo "<td>" . $row['App_status'] . "</td>";
         if ($row['App_status'] == 'Cancelled') {
           echo "<td><span style='color: #f85a40;'>" . $row['App_status'] . "</span></td>";
           echo "<td><button type='button'   class='btn btn-success btn-accept' onclick=\"openModal1('" . $row['appointment_ID'] . "')\" data-toggle='modal' data-target='#viewehr' disabled >View records</button>";        
@@ -217,14 +211,14 @@ if ($result1->num_rows > 0) {
 <!--ehr modal function-->
 <script>
   function openModal1(appointmentID1) {
-    $('#app_idModal1').val(appointmentID1); // Set the value of Appointment ID textbox
+    $('#app_idModal1').val(appointmentID1); 
     $.ajax({
       type: 'POST',
       url: 'patientfetchehr.php',
       data: { appointmentID: appointmentID1 },
       success: function(response) {
-        $('#viewehr').modal('show'); // Open the modal
-        $('#viewehr .modal-body').html(response); // Update the modal body with the response from the server
+        $('#viewehr').modal('show'); 
+        $('#viewehr .modal-body').html(response); 
       },
       error: function(xhr, status, error) {
         console.error(error);
@@ -234,14 +228,14 @@ if ($result1->num_rows > 0) {
 </script>
 <script>
   function openModal2(appointmentID1) {
-    $('#app_idModal1').val(appointmentID1); // Set the value of Appointment ID textbox
+    $('#app_idModal1').val(appointmentID1); 
     $.ajax({
       type: 'POST',
       url: 'patientfetchfiles.php',
       data: { appointmentID: appointmentID1 },
       success: function(response) {
-        $('#fileupload').modal('show'); // Open the modal
-        $('#fileupload .modal-body').html(response); // Update the modal body with the response from the server
+        $('#fileupload').modal('show'); 
+        $('#fileupload .modal-body').html(response); 
       },
       error: function(xhr, status, error) {
         console.error(error);
@@ -277,10 +271,6 @@ if ($result1->num_rows > 0) {
 <!-- Vendor JS Files -->
 <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="assets/vendor/aos/aos.js"></script>
-
-
-
-<!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
 
 </body>

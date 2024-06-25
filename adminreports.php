@@ -1,5 +1,5 @@
 <?php
-// Initialize the session
+
 session_start();
 require_once "config.php";
 // time and date
@@ -377,9 +377,6 @@ function drawCharts() {
 // Draw Chart 5: Total Appointments by Department per Month (Multi-Line Chart)
 
 
-
-    // Function to update chart based on selected departments
-    // Function to update chart based on selected departments for Chart 5
    
     //--end--//
     var data6 = <?php echo json_encode($data6); ?>;
