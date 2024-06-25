@@ -150,7 +150,7 @@ function loadSelectedOption() {
   <?php
             $sql = "SELECT doctor.docid, doctor.docemail, doctor.docname, doctor.docpassword, doctor.doctel, specialties.sname
             FROM doctor
-            JOIN specialties ON doctor.specialties = specialties.id;";
+            JOIN specialties ON doctor.specialties = specialties.id WHERE delete_status IS NULL OR delete_status = 0;";
             $result = $mysqli->query($sql);
 while ($row = $result->fetch_assoc()) {
     $docid = $row['docid'];

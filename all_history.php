@@ -4,7 +4,6 @@ session_start();
 require_once "config.php";
 // time and date
 $today = date("F j, Y ");
-// Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["adminloggedin"]) || $_SESSION["adminloggedin"] !== true){
     header("location: admin_login.php");
     exit;
@@ -39,7 +38,6 @@ $rowCount = mysqli_num_rows($result)
   <meta content="" name="keywords">
 
  
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
@@ -89,12 +87,12 @@ $rowCount = mysqli_num_rows($result)
     <thead class="table-dark">
             <th>Appointment ID </th>
             <th>Doctor name</th>
-            <th>Department</th>
+            <th>Patient name</th>
+            <th>Patient ID</th>
             <th>Department</th>
             <th>Services availed<br>
               (Diagnostic Test)
             </th>
-            <th>Patient ID</th>
             <th>Date</th>
             <th>Time </th>
             <th>Status </th>
@@ -107,7 +105,7 @@ $rowCount = mysqli_num_rows($result)
 <?php
 $pId1 = $_SESSION['id'];
 $limit = 15; // Number of rows per page
-$page = isset($_GET['page']) ? intval($_GET['page']) : 1; // Get current page from URL, default is 1
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1; 
 $offset = ($page - 1) * $limit; 
 
 $totalResult = $mysqli->query("SELECT COUNT(*) as count FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
@@ -118,7 +116,6 @@ $totalRow = $totalResult->fetch_assoc();
 $totalRows = $totalRow['count'];
 $totalPages = ceil($totalRows / $limit); 
 
-// Loop through the result set and generate table rows
 $sql1 = "	SELECT appointments.appointment_ID, doctor.docname, specialties.sname, patient_detail.pId, patient_detail.pname,
 appointments.appDate,appointments.service1,appointments.service2, appointments.service3, appointments.appTime, docsched.time_schedule, appointments.App_status FROM appointments INNER JOIN doctor ON appointments.docid = doctor.docid
 INNER JOIN specialties ON doctor.specialties = specialties.id INNER JOIN patient_detail 
@@ -133,10 +130,10 @@ if ($result1->num_rows > 0) {
         echo "<tr>";
         echo "<td>" . $row['appointment_ID'] . "</td>";
         echo "<td>" . $row['docname'] . "</td>";
-        echo "<td>" . $row['sname'] . "</td>";
+        echo "<td>" . $row['pname'] . "</td>";
+        echo "<td>" . $row['pId'] . "</td>";
         echo "<td>" . $row['sname'] . "</td>";
         echo "<td>" . $row['service1'] . "<br>" . $row['service2'] . "<br>" . $row['service3'] . "</td>";
-        echo "<td>" . $row['pId'] . "</td>";
         echo "<td>" . $row['appDate'] . "</td>";
         echo "<td>" . $row['time_schedule'] . "</td>";
         if ($row['App_status'] === 'Cancelled') {
@@ -149,7 +146,7 @@ if ($result1->num_rows > 0) {
         echo "</tr>";
     }
 } else {
-    echo "<tr><td colspan='8'>No data available</td></tr>";
+    echo "<tr><td colspan='9'>No data available</td></tr>";
 }
 
 ?>
@@ -157,11 +154,11 @@ if ($result1->num_rows > 0) {
 <nav>
   <ul class="pagination">
     <?php
-    // Determine the start and end of the page range to display
+
     $start = max(1, $page - 2);
     $end = min($totalPages, $page + 2);
     
-    // Adjust start and end if close to the beginning or end
+
     if ($page <= 3) {
         $end = min(5, $totalPages);
     }

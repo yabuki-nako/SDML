@@ -19,7 +19,7 @@
                 <ul>
                     <li <?php if($activePage == 'add_doctors.php') echo 'class="active"'; ?>><a href="add_doctors.php">Add Doctors</a></li>
                     <li <?php if($activePage == 'update_doctors.php') echo 'class="active"'; ?>><a href="update_doctors.php">Update Doctor account</a></li>
-                    <li <?php if($activePage == 'delete_doctors.php') echo 'class="active"'; ?>><a href="delete_doctors.php">Delete Doctor account</a></li>
+                    <li <?php if($activePage == 'delete_doctors.php') echo 'class="active"'; ?>><a href="delete_doctors.php">Disable/Enable Doctor account</a></li>
                     <li <?php if($activePage == 'all_doctors.php') echo 'class="active"'; ?>><a href="all_doctors.php">View Doctors</a></li>
                 </ul>
             </li>

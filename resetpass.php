@@ -4,7 +4,7 @@ session_start();
 require_once "config.php";
 // time and date
 $today = date("F j, Y ");
-// Check if the user is logged in, if not then redirect him to login page
+
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
@@ -15,11 +15,11 @@ FROM doctor
 JOIN specialties ON doctor.specialties = specialties.id;";
 $result = $mysqli->query($sql);
 
-// Define variables and initialize with empty values
+
 $new_password = $confirm_password = "";
 $new_password_err = $confirm_password_err = "";
  
-// Processing form data when form is submitted
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Validate new password
@@ -31,7 +31,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $new_password = trim($_POST["new_password"]);
     }
     
-    // Validate confirm password
+
     if(empty(trim($_POST["confirm_password"]))){
         $confirm_password_err = "Please confirm the password.";
     } else{
@@ -41,9 +41,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
         
-    // Check input errors before updating the database
+
     if(empty($new_password_err) && empty($confirm_password_err)){
-        // Prepare an update statement
+
         $sql = "UPDATE patient_detail SET password = ? WHERE pid = ?";
         
         if($stmt = $mysqli->prepare($sql)){

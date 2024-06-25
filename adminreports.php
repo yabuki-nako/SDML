@@ -1,5 +1,5 @@
 <?php
-// Initialize the session
+
 session_start();
 require_once "config.php";
 // time and date
@@ -111,76 +111,7 @@ while ($row4 = $result4->fetch_assoc()) {
 }
 
 // Query to get data for chart 5 (Total appointments by department per month)
-$sql5 = "SELECT 
-service AS department,
-services.month_number AS month_number, 
-COUNT(*) AS bookings_count 
-FROM (
-SELECT 
-    appointments.docid,
-    appointments.App_status,
-    specialties.sname,
-    MONTH(appointments.appDate) AS month_number,
-    appointments.service1 AS service
-FROM appointments
-INNER JOIN doctor ON appointments.docid = doctor.docid
-INNER JOIN specialties ON doctor.specialties = specialties.id 
-WHERE appointments.App_status = 'done'
-AND appointments.service1 IS NOT NULL
-
-UNION ALL
-
-SELECT 
-    appointments.docid,
-    appointments.App_status,
-    specialties.sname,
-    MONTH(appointments.appDate) AS month_number,
-    appointments.service2 AS service
-FROM appointments
-INNER JOIN doctor ON appointments.docid = doctor.docid
-INNER JOIN specialties ON doctor.specialties = specialties.id 
-WHERE appointments.App_status = 'done'
-AND appointments.service2 IS NOT NULL
-
-UNION ALL
-
-SELECT 
-    appointments.docid,
-    appointments.App_status,
-    specialties.sname,
-    MONTH(appointments.appDate) AS month_number,
-    appointments.service3 AS service
-FROM appointments
-INNER JOIN doctor ON appointments.docid = doctor.docid
-INNER JOIN specialties ON doctor.specialties = specialties.id 
-WHERE appointments.App_status = 'done'
-AND appointments.service3 IS NOT NULL
-
-UNION ALL
-
-SELECT 
-    appointments.docid,
-    appointments.App_status,
-    specialties.sname,
-    MONTH(appointments.appDate) AS month_number,
-    specialties.sname AS service
-FROM appointments
-INNER JOIN doctor ON appointments.docid = doctor.docid
-INNER JOIN specialties ON doctor.specialties = specialties.id 
-WHERE appointments.App_status = 'done'
-AND appointments.service1 IS NULL
-AND appointments.service2 IS NULL
-AND appointments.service3 IS NULL
-AND doctor.medtech = FALSE
-) AS services
-GROUP BY department, services.month_number;";
-
-$result5 = $mysqli->query($sql5);
 $currentyear = date('Y');
-$data5 = array();
-while ($row5 = $result5->fetch_assoc()) {
-    $data5[] = $row5;
-}
 $sql6 = "SELECT 
 service AS department,
 services.month_number AS month_number, 
@@ -341,9 +272,8 @@ $(window).resize(function(){
                     <div id="chart2"></div><br>
                     <div id="chart3"></div><br>
                     <div id="chart4"></div><br>
-                    <div id="chart5"></div><br><br>
                     <div class="yearDropdown">
-                    <i>Change year <strong>Chart 6</strong></i>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i>Change year <strong>Chart 5</strong></i>&nbsp;&nbsp;&nbsp;&nbsp;
                     <div id="yearDropdown"></div>
                     </div>   
                     <div id="chart6"></div>
@@ -445,49 +375,8 @@ function drawCharts() {
     chart4.draw(dataTable4, options4);
     //
 // Draw Chart 5: Total Appointments by Department per Month (Multi-Line Chart)
-var data5 = <?php echo json_encode($data5); ?>;
-var dataTable5 = new google.visualization.DataTable();
-dataTable5.addColumn('string', 'Month');
-
-// Add columns for each department dynamically
-var departments = [];
-for (var m = 0; m < data5.length; m++) {
-    if (!departments.includes(data5[m].department)) {
-        departments.push(data5[m].department);
-        dataTable5.addColumn('number', data5[m].department);
-    }
-}
-
-// Add rows
-var rows = {};
-for (var n = 0; n < data5.length; n++) {
-    var monthNumber5 = parseInt(data5[n].month_number);
-    var monthName5 = monthNames[monthNumber5 - 1]; // Adjust index to start from 0
-    if (!rows[monthName5]) {
-        rows[monthName5] = Array(departments.length + 1).fill(0); // Add 1 for the 'Month' column
-        rows[monthName5][0] = monthName5;
-    }
-    var departmentIndex5 = departments.indexOf(data5[n].department) + 1;
-    rows[monthName5][departmentIndex5] = parseInt(data5[n].bookings_count);
-}
-
-// Convert rows object to array and add to DataTable
-for (var month5 in rows) {
-    dataTable5.addRow(rows[month5]);
-}
-
-// Draw the chart
-var options5 = {
-    title: 'Total Services availed per month:',
-    curveType: 'function',
-    legend: { position: 'bottom' }
-};
-var chart5 = new google.visualization.LineChart(document.getElementById('chart5'));
-chart5.draw(dataTable5, options5);
 
 
-    // Function to update chart based on selected departments
-    // Function to update chart based on selected departments for Chart 5
    
     //--end--//
     var data6 = <?php echo json_encode($data6); ?>;

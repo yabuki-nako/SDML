@@ -4,7 +4,6 @@ session_start();
 require_once "config.php";
 // time and date
 $today = date("F j, Y ");
-// Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
@@ -37,19 +36,12 @@ $result = $mysqli->query($sql);
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/owlcarousel/owl.carousel.min.css" rel="stylesheet">
-
-
-  <!-- Template Main CSS File -->
-
-  <!-- <link href="assets/css/patientmain.css" rel="stylesheet"> -->
   <link href="assets/css/header.css" rel="stylesheet">
   <link href="assets/css/patient.css" rel="stylesheet">
   <!-- TIMER FUNCTION -->
@@ -238,7 +230,7 @@ if ($result3->num_rows > 0) {
             $sql2 = "SELECT doctor.docid, doctor.docemail, doctor.docname, doctor.doctel, specialties.sname
             FROM doctor
             JOIN specialties ON doctor.specialties = specialties.id
-            WHERE sname = '".$selectedSpecialty."'";
+            WHERE sname = '".$selectedSpecialty."' and delete_status IS NULL OR delete_status = 0 ";
             $result2 = $mysqli->query($sql2);
             for ($x = 0; $x < $result2->num_rows; $x++) {
               $row = $result2->fetch_assoc();

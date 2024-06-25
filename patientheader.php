@@ -6,8 +6,6 @@ $activePage = basename($_SERVER['PHP_SELF']);
 
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
       <div class="headercont">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="assets/img/logo.png" alt=""> -->
         <img src ="assets/img/logoName.png" width="250" height="70" >
   </div>
       <nav id="navbar" class="navbar" >

@@ -33,15 +33,12 @@ $rowCount = mysqli_num_rows($result)
   <meta content="" name="keywords">
 
  
-  <!-- Google Fonts -->
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <!-- Template Main CSS File -->
   <link href="assets/css/patient.css" rel="stylesheet">
   <!-- TIMER FUNCTION -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -79,7 +76,7 @@ $rowCount = mysqli_num_rows($result)
             <th>Doctor ID  </th>
             <th>Name</th>
             <th>Email</th>
-            <th>Telephone</th>
+            <th>Contact Number</th>
             <th>Department</th>
 
             </div>
@@ -89,30 +86,44 @@ $rowCount = mysqli_num_rows($result)
 </tbody>
 <?php
 $pId = $_SESSION['id'];
-// Loop through the result set and generate table rows
-$sql1 = "	SELECT doctor.docid, doctor.docemail, doctor.docname, doctor.docpassword, doctor.doctel, specialties.sname
+$sql1 = "	SELECT doctor.docid, doctor.docemail, doctor.docname, doctor.docpassword, doctor.doctel, specialties.sname, doctor.delete_status
 FROM doctor
 JOIN specialties ON doctor.specialties = specialties.id;";
 $result1 = $mysqli->query($sql1); 
 
 if ($result1->num_rows > 0) {
     while ($row = $result1->fetch_assoc()) {
-        echo "<tr>";
-        echo "<td>" . $row['docid'] . "</td>";
-        echo "<td>" . $row['docname'] . "</td>";
-        echo "<td>" . $row['docemail'] . "</td>";
-        echo "<td>" . $row['doctel'] . "</td>";
-        echo "<td>" . $row['sname'] . "</td>";
+      if ($row['delete_status'] == 1) {
+        echo "<tr> ";
+        echo "<td> <span style='color: #f85a40;'>" . $row['docid'] . "</td> </span>";
+        echo "<td> <span style='color: #f85a40;'>" . $row['docname'] . "</td> </span>";
+        echo "<td> <span style='color: #f85a40;'>" . $row['docemail'] . "</td> </span>";
+        echo "<td> <span style='color: #f85a40;'>" . $row['doctel'] . "</td> </span>";
+        echo "<td> <span style='color: #f85a40;'>" . $row['sname'] . "</td> </span>";
 
         echo "</tr>";
+        }else {
+          echo "<tr>";
+          echo "<td>" . $row['docid'] . "</td>";
+          echo "<td>" . $row['docname'] . "</td>";
+          echo "<td>" . $row['docemail'] . "</td>";
+          echo "<td>" . $row['doctel'] . "</td>";
+          echo "<td>" . $row['sname'] . "</td>";
+  
+          echo "</tr>";
+        }
+
     }
 } else {
-    echo "<tr><td colspan='4'>No data available</td></tr>";
+    echo "<tr><td colspan='5'>No data available</td></tr>";
 }
 
 ?>
+</table>
+<i style="color:red">Take note: Disabled doctor account/s are in red</i>
+
 </div>
-        
+   
                   </div>
          
         </div>
