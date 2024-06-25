@@ -74,7 +74,7 @@ $rowCount = mysqli_num_rows($result)
 <?php include 'patientheader.php';?>
 <section class="vh-110">
 <br><br>
-<div class ="mb-5 mt-5">
+<div class ="mb-5">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col col-xl-10 mt-5">
         <div class="card" style="border-radius: 1rem; background-color: white;">
@@ -150,7 +150,7 @@ if ($result1->num_rows > 0) {
    
     }
 } else {
-    echo "<tr><td colspan='7'>No data available</td></tr>";
+    echo "<tr><td colspan='8'>No data available</td></tr>";
 }
 
 ?>

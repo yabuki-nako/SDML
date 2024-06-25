@@ -89,12 +89,12 @@ $rowCount = mysqli_num_rows($result)
     <thead class="table-dark">
             <th>Appointment ID </th>
             <th>Doctor name</th>
-            <th>Department</th>
+            <th>Patient name</th>
+            <th>Patient ID</th>
             <th>Department</th>
             <th>Services availed<br>
               (Diagnostic Test)
             </th>
-            <th>Patient ID</th>
             <th>Date</th>
             <th>Time </th>
             <th>Status </th>
@@ -133,10 +133,10 @@ if ($result1->num_rows > 0) {
         echo "<tr>";
         echo "<td>" . $row['appointment_ID'] . "</td>";
         echo "<td>" . $row['docname'] . "</td>";
-        echo "<td>" . $row['sname'] . "</td>";
+        echo "<td>" . $row['pname'] . "</td>";
+        echo "<td>" . $row['pId'] . "</td>";
         echo "<td>" . $row['sname'] . "</td>";
         echo "<td>" . $row['service1'] . "<br>" . $row['service2'] . "<br>" . $row['service3'] . "</td>";
-        echo "<td>" . $row['pId'] . "</td>";
         echo "<td>" . $row['appDate'] . "</td>";
         echo "<td>" . $row['time_schedule'] . "</td>";
         if ($row['App_status'] === 'Cancelled') {
@@ -149,7 +149,7 @@ if ($result1->num_rows > 0) {
         echo "</tr>";
     }
 } else {
-    echo "<tr><td colspan='8'>No data available</td></tr>";
+    echo "<tr><td colspan='9'>No data available</td></tr>";
 }
 
 ?>

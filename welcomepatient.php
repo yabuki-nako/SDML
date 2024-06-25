@@ -238,7 +238,7 @@ if ($result3->num_rows > 0) {
             $sql2 = "SELECT doctor.docid, doctor.docemail, doctor.docname, doctor.doctel, specialties.sname
             FROM doctor
             JOIN specialties ON doctor.specialties = specialties.id
-            WHERE sname = '".$selectedSpecialty."'";
+            WHERE sname = '".$selectedSpecialty."' and delete_status IS NULL OR delete_status = 0 ";
             $result2 = $mysqli->query($sql2);
             for ($x = 0; $x < $result2->num_rows; $x++) {
               $row = $result2->fetch_assoc();

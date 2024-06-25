@@ -111,7 +111,7 @@ if ($result1->num_rows > 0) {
         echo "</tr>";
     }
 } else {
-    echo "<tr><td colspan='4'>No data available</td></tr>";
+    echo "<tr><td colspan='7'>No data available</td></tr>";
 }
 
 ?>

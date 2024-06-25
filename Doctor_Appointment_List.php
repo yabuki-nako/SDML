@@ -240,6 +240,7 @@ switch ($action) {
 <div id="loading-overlay">
     <div id="loading-wheel">
         <img src="assets/img/ZKZg.gif" style="width:48px;height:48px;">
+        <p>Sending Email<span class="dots"></span></p>
     </div>
 </div>
 </div>
@@ -433,7 +434,7 @@ if ($result1->num_rows > 0) {
 
 }
 } else {
-echo "<tr><td colspan='6'>No data available</td></tr>";
+echo "<tr><td colspan='10'>No data available</td></tr>";
 }
 ?>
 </table>
@@ -475,7 +476,6 @@ function collectData(appointmentID, docname, pname,sname, service1, service2, se
         },
         success: function(response) {
           hideLoadingOverlay();
-            // alert("Email sent!"); // Notify user if email is sent successfully
 
         },
         error: function(xhr, status, error) {
@@ -821,6 +821,7 @@ Drug name, prescribed date -->
     $('#prescribeDate_Modal').val(appointmentDate );
     $('#exampleModal').modal('show'); // Open the modal
   }
+  
 </script>
 <script>
  

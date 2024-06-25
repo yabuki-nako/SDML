@@ -15,8 +15,33 @@ require_once "config.php";
 $email = $password = $pname = $pcellphone = $pGender = $pBirthday = $pAddress = "";
 $email_err = $password_err = $login_err = "";
 
-// Processing form data when form is submitted
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
+//   $email = 'saint.dominic4027@gmail.com';
+//   $password ='123456';
+//   // Prepare an insert statement
+//   $sql2 = "INSERT INTO admin_account (email,password) values (?,?)";
+   
+//   if($stmt = $mysqli->prepare($sql2)){
+//       // Bind variables to the prepared statement as parameters
+//       $stmt->bind_param("ss",$param_email, $param_password,);
+      
+//       // Set parameters
+//       $param_email = $email;
+//       $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+      
+      
+//       // Attempt to execute the prepared statement
+//       if($stmt->execute()){
+//         echo  '<script>alert("Added Successfully!")</script>';
+//           header("location: add_doctors.php");
+//       } else{
+//           echo "Oops! Something went wrong. Please try again later.";
+//       }
+
+//       // Close statement
+//       $stmt->close();
+//   }
 
     // Check if username is empty
     if(empty(trim($_POST["email"]))){

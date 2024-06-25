@@ -54,9 +54,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if email exists, if yes then verify password
                 if($stmt->num_rows == 1){                    
                     // Bind result variables
-                    $stmt->bind_result($id, $email, $password);
+                    $stmt->bind_result($id, $email,$hashed_password);
                     if($stmt->fetch()){
-                        if($password){
+                        if(password_verify($password, $hashed_password)){
                             // Password is correct, so start a new session
                             session_start();
                             
@@ -69,15 +69,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             header("location: all_history.php");
                         } else{
                             // Password is not valid, display a generic error message
-                            $login_err = "Invalid email or password.";
+                            $login_err = "Incorrect password for admin";
                         }
                     }
                 } else{
                     // email doesn't exist, display a generic error message
-                    $login_err = "Invalid email or password.";
+                    $login_err = "Incorrect email for admin";
                 }
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Oops! ";
             }
 
             // Close statement

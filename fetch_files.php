@@ -9,7 +9,7 @@ $result = $mysqli->query($sql);
 
 if ($result->num_rows > 0) {
     echo "<table class='table'>";
-    echo "<thead><tr><th>File Name</th><th>Uoload Date</th><th>Action</th></tr></thead>";
+    echo "<thead><tr><th>File Name</th><th>Upload Date</th><th>Action</th></tr></thead>";
     echo "<tbody>";
     while ($row = $result->fetch_assoc()) {
         echo "<tr>";

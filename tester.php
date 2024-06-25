@@ -34,12 +34,11 @@ if (empty($_POST["appTime"])) {
   $appTime = trim($_POST["appTime"]);
 }
 
- if (trim($_POST['medtech']) == '1' && trim($_POST['services1']) == "Select Service") {
-        $ser_err = "Please select at least one service.";
-        echo "<script type='text/javascript'>alert('Please select at least one service.');</script>";
-    } else {
-        $ser_err = ""; // Set $ser_err to an empty string when the condition is not met
-    }
+if (trim($_POST['medtech']) == '1' && trim($_POST['services1']) == "Select Service") {
+  $ser_err = "Please select at least one service.";
+} else {
+  $ser_err = ""; // Set $ser_err to an empty string when the condition is not met
+}
 
 if (empty(trim($_POST["appDate"]))) {
   $appDate_err = "Please select application Date.";
@@ -86,7 +85,7 @@ if (empty($appTime_err) && empty($appDate_err)) {
 
 $medtech = $_POST['medtech'];
   // Check input errors before inserting in database
-  if(empty($appDate_err) && empty($appTime_err) && empty($docid_err) && empty($ser_err)){
+  if(empty($appDate_err) && empty($appTime_err) && empty($docid_err)){
     // Prepare an insert statement
     $sql2 = "INSERT INTO appointments (docid, pId, appDate, appTime, service1, service2, service3, App_status) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')";
        
@@ -183,7 +182,7 @@ $medtech = $_POST['medtech'];
 
           <div class="form-outline mb-4">
             <label class="form-label" for="gender">Select Services</label>
-            <select name="docid" id ="docid" class="form-control form-control-lg <?php echo (!empty($docid_err)) ? 'is-invalid' : ''; ?>">
+            <select name="docid" id ="docid"class="form-control form-control-lg <?php echo (!empty($docid_err)) ? 'is-invalid' : ''; ?>">
 <option disabled selected>Select Services</option>
 <?php
 $medtech = array();

@@ -38,8 +38,8 @@ if(isset($_SESSION['otp']) && otpSentRecently()) {
     $_SESSION['otp_time'] = $current_time;
 
     // Create PHPMailer instance
-    $mail = new PHPMailer();
-    // $mail->SMTPDebug = 0;
+    // $mail = new PHPMailer();
+    // $mail->SMTPDebug = 2;
     // $mail->Debugoutput = 'html'; 
     // Configure PHPMailer
     $mail->isSMTP();

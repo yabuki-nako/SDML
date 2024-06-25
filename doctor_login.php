@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Prepare a select statement
             $sql = "SELECT doctor.docid, doctor.docemail,doctor.docpassword,doctor.docname, doctor.doctel, specialties.sname , doctor.medtech
             FROM doctor
-            JOIN specialties ON doctor.specialties = specialties.id WHERE docemail = ?";
+            JOIN specialties ON doctor.specialties = specialties.id WHERE docemail = ? AND (delete_status IS NULL OR delete_status = 0)";
 
             if ($stmt = $mysqli->prepare($sql)) {
                 // Bind variables to the prepared statement as parameters
@@ -55,9 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Check if email exists, if yes then verify password
                     if ($stmt->num_rows == 1) {
                         // Bind result variables
-                        $stmt->bind_result($docid, $docemail, $docpassword,  $docname,$doctel, $sname, $medtech);
+                        $stmt->bind_result($docid, $docemail, $hashed_password, $docname,$doctel, $sname, $medtech);
                         if ($stmt->fetch()) {
-                            if ($docpassword) {
+                            if (password_verify($password, $hashed_password)) {
                                 // Password is correct, so start a new session
                                 session_start();
 

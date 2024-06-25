@@ -90,7 +90,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($docemail_err) && empty($docpassword_err) && empty($docname_err) && empty($doctel_err) && empty($specialties_err)){
         $specialties = intval($specialties);
         // Prepare an insert statement
-        $sql = "INSERT INTO doctor (docname, docemail, docpassword, doctel,specialties, medtech) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO doctor ( docname, docemail, docpassword, doctel,specialties, medtech) VALUES (?, ?, ?, ?, ?, ?)";
          
         if($stmt = $mysqli->prepare($sql)){
             // Bind variables to the prepared statement as parameters
@@ -107,8 +107,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
             // Attempt to execute the prepared statement
             if($stmt->execute()){
-              echo  '<script>alert("Added Successfully!")</script>';
-                header("location: add_doctors.php");
+              echo "<script type='text/javascript'>alert('Sucessfully added a doctor account');</script>";
+              echo "<script type='text/javascript'>location.href = 'add_doctors.php';</script>";
             } else{
                 echo "Oops! Something went wrong. Please try again later.";
             }
